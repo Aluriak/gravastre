@@ -1,0 +1,62 @@
+# Gravastre
+C++/Qt rewriting of [Gravastre-2.0](https://github.com/Aluriak/Gravastre-2.0).
+
+
+## Main idea
+Gravastre is a gravitationnal simulation where all agents (named Astres) interacts, no matter there distance or their mass.
+The Qt interface allow user to see and play with the simulation during the computations.
+
+
+## Usage
+First, you will have to generate the builder Makefile:
+
+    make
+
+Then, go to build dir, build the project and launch it:
+
+    cd build
+    make
+    ./gravastre
+
+
+## Interactions
+Currently, some interactions are implemented:
+- Mouse:
+    - left click: create a new unamed astre (hold to define an initial speed)
+    - right click: translation of the view (not properly working)
+- Keyboard:
+    - i/e: decrease or increase mass of next created astres
+    - d: clear all universe
+    - o/p: decrease or increase the new astre initial speed sensitivity
+    - space: recenter to the default view
+
+Before compilation, you may want to take a look to:
+- main.cpp, where the initial system is defined
+- converters.h, where some constants including collision presence, pixel per UA and simulation speed are defined
+
+
+## Features
+- [X] complete and personalisable simulation
+- [ ] zoom and translation in the world
+- [ ] astre selection
+- [ ] astre realistic radius + token for replace astre when too far
+- [ ] print astre name when mouse over it (or its token)
+- [ ] config file for constants
+- [ ] config file for systems
+- [ ] save systems
+- [ ] provides GUI for generation of stable systems
+- [ ] improve existing GUI with informations about selected astre
+
+
+## Units
+See the _converters.h_ header for units definitions and constants.
+Units used by the Astre class are real units ; conversions to non real units is done dynamically,
+when needed by the computations.
+
+All position of Astres are given in [Astronomical Unit](https://en.wikipedia.org/wiki/Astronomical_unit).
+The high-left border of the screen is the position reference, at (0;0).
+
+Speeds are given to the engine in kilometer per seconds (for user convenience),
+although the speed is internally in [meter per second](https://en.wikipedia.org/wiki/SI_base_unit).
+
+
