@@ -68,9 +68,11 @@ void eng::Astre::accelerateTo(eng::Astre* const othr, const double dist) {
 
 
 void eng::Astre::absorbs(eng::Astre* const othr) {
-    //std::cout << this->name << " absorbs " << othr->name << std::endl;
     double mass_ratio = othr->mass / (othr->mass + this->mass);
-    //std::cout << "\tmass ratio: " << mass_ratio << std::endl;
+#if DEBUG_ABSORBED_LOGS
+    std::cout << this->name << " absorbs " << othr->name << std::endl;
+    std::cout << "\tmass ratio: " << mass_ratio << std::endl;
+#endif
     this->mass += othr->mass;
     this->radius = Astre::mass_to_radius(this->mass);
     this->speed_x = (1.-mass_ratio) * this->speed_x + (mass_ratio * othr->speed_x);
@@ -82,7 +84,9 @@ void eng::Astre::absorbs(eng::Astre* const othr) {
 
 
 void eng::Astre::nullify() {
-    //std::cout << this->name << " nullified !" << std::endl;
+#if DEBUG_NULLIFIED_LOGS
+    std::cout << this->name << " nullified !" << std::endl;
+#endif
     this->nullified = true;
     this->visible = false;
 }
@@ -97,17 +101,21 @@ double eng::Astre::distTo(const Astre* const othr) const {
     double dist = sqrt(
         (this->position_x - othr->position_x) * (this->position_x - othr->position_x)
       + (this->position_y - othr->position_y) * (this->position_y - othr->position_y));
-    //std::cout << this->name << " (" << this->position_x << ";" << this->position_y
-              //<< ") is distant from "
-              //<< othr->name << " (" << othr->position_x << ";" << othr->position_y
-              //<< ") to " << dist << " au" << std::endl;
+#if DEBUG_DISTANCES_LOGS
+    std::cout << this->name << " (" << this->position_x << ";" << this->position_y
+              << ") is distant from "
+              << othr->name << " (" << othr->position_x << ";" << othr->position_y
+              << ") to " << dist << " au" << std::endl;
+#endif
     return dist;
 }
 
 bool eng::Astre::collide(const Astre* const othr, const double dist) const {
 #if COLLISION
     double min_separation = this->radius + othr->radius;
-    //std::cout << "Collision: " << min_separation << "\tdist: " << dist <<  std::endl;
+#if DEBUG_COLLISION_LOGS
+    std::cout << "Collision: " << min_separation << "\tdist: " << dist <<  std::endl;
+#endif
     return unit::au_to_pixel(dist) <= min_separation;
 #else
     return false;

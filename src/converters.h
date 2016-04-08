@@ -16,6 +16,10 @@
 // show distance to the Astre named "sun", maximal, minimal and diff.
 // can be used for show modifications of orbits.
 #define DEBUG_SUN_DIST true
+#define DEBUG_COLLISION_LOGS false
+#define DEBUG_DISTANCES_LOGS false
+#define DEBUG_NULLIFIED_LOGS false
+#define DEBUG_ABSORBED_LOGS false
 
 /**
  * Next are defined constants that are immutable, relative to
