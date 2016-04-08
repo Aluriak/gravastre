@@ -7,7 +7,8 @@
  * Next are defined constants that depends of the expected simulation behavior
  */
 #define PIXEL_PER_AU 300  // number of pixel representing an AU
-#define SIMULATION_SPEED 8e3  // how speedy is the simulation, compared to reality
+#define SIMULATION_SPEED 4e-4  // how speedy is the simulation, compared to reality
+#define DELTA_T 1./SIMULATION_SPEED
 #define COLLISION true  // set to false for avoid collisions
 
 /**
