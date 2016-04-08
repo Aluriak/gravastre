@@ -28,7 +28,7 @@
 // NB: The simulation speed has a direct impact on it.
 //     The speedy the simulation, the higher should be G
 //     for keep the mathematic equations cohesion.
-#define GRAVITATIONNAL_CONSTANT 6.67e-11*SIMULATION_SPEED
+#define GRAVITATIONNAL_CONSTANT 6.67e-11
 // AU: Astronomic Unit, about 150 000 000 kilometers
 #define METER_PER_AU 150e9
 #define AU_PER_METER 1./METER_PER_AU
@@ -85,13 +85,6 @@ namespace unit {
     }
     inline double au_per_second_to_kilometer_per_second(double au_per_sec) {
         return au_per_sec * KILOMETER_PER_AU;
-    }
-
-    inline double real_speed_to_simulation_speed(double speed) {
-        return speed * SIMULATION_SPEED;
-    }
-    inline double simulation_speed_to_real_speed(double speed) {
-        return speed / SIMULATION_SPEED;
     }
 
     /**
