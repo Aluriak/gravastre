@@ -26,12 +26,14 @@ eng::Astre::Astre(double mass, double radius, double pos_x, double pos_y,
 
 
 void eng::Astre::update() {
-    // add acceleration to speed and speed to position
-    // F=ma <=> acceleration = F/mass
-    this->speed_x += this->accel_x / this->mass;
-    this->speed_y += this->accel_y / this->mass;
-    this->position_x += unit::real_speed_to_simulation_speed(unit::meter_to_au(speed_x));
-    this->position_y += unit::real_speed_to_simulation_speed(unit::meter_to_au(speed_y));
+    double delta_t = DELTA_T;
+    this->position_x += unit::meter_to_au(delta_t * this->speed_x);
+    this->position_y += unit::meter_to_au(delta_t * this->speed_y);
+    this->speed_x += delta_t * this->accel_x / this->mass;
+    this->speed_y += delta_t * this->accel_y / this->mass;
+
+    //printf("ASTRE %s: (%f;%f), (%f;%f)\n", this->getName().c_str(), this->position_x, this->position_y, this->speed_x, this->speed_y);
+
     // prepare the next step
     this->accel_x = 0;
     this->accel_y = 0;
@@ -40,7 +42,6 @@ void eng::Astre::update() {
 
 void eng::Astre::accelerateTo(eng::Astre* const othr, const double dist) {
     assert(othr != NULL);
-    //double attraction = - GRAVITATIONNAL_CONSTANT * othr->mass * this->mass / squared_dist;
     // get graviationnal force F (in newton)
     double attraction = unit::attraction_force_meter(
             this->mass, othr->mass, unit::au_to_meter(dist));
