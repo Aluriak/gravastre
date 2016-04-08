@@ -16,9 +16,11 @@ eng::Astre::Astre(double mass, double radius, double pos_x, double pos_y,
     this->visible = true;
     this->nullified = false;
     assert(mass != 0.);
+#if DEBUG_SUN_DIST
     // debug
     dist_to_sun_min = -1;
     dist_to_sun_max = -1;
+#endif
 }
 
 
@@ -46,20 +48,22 @@ void eng::Astre::accelerateTo(eng::Astre* const othr, const double dist) {
     this->accel_x += attraction * ((this->position_x - othr->position_x) / dist);
     this->accel_y += attraction * ((this->position_y - othr->position_y) / dist);
 
+#if DEBUG_SUN_DIST
     if(othr->dist_to_sun_min < 0.) { // DEBUG
         othr->dist_to_sun_min = dist;
         othr->dist_to_sun_max = dist;
     }
 
     // DEBUG testing  (NB: these lines modify the other astre)
-    //if(this->name == "sun") {
-        //if(dist < othr->dist_to_sun_min) othr->dist_to_sun_min = dist;
-        //if(dist > othr->dist_to_sun_max) othr->dist_to_sun_max = dist;
-        //std::cout << "DIST " << othr->name
-            //<< "-sun: min=" << othr->dist_to_sun_min
-            //<< "; max=" << othr->dist_to_sun_max
-            //<< "; diff=" << othr->dist_to_sun_max - othr->dist_to_sun_min << std::endl;
-    //}
+    if(this->name == "sun") {
+        if(dist < othr->dist_to_sun_min) othr->dist_to_sun_min = dist;
+        if(dist > othr->dist_to_sun_max) othr->dist_to_sun_max = dist;
+        std::cout << "DIST " << othr->name
+            << "-sun: min=" << othr->dist_to_sun_min
+            << "; max=" << othr->dist_to_sun_max
+            << "; diff=" << othr->dist_to_sun_max - othr->dist_to_sun_min << std::endl;
+    }
+#endif
 }
 
 

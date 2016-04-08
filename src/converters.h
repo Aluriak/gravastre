@@ -4,11 +4,18 @@
 
 
 /**
- * Next are defined constants that depends of the simulation
+ * Next are defined constants that depends of the expected simulation behavior
  */
-#define PIXEL_PER_AU 300  // how many pixel for representing an AU ?
+#define PIXEL_PER_AU 300  // number of pixel representing an AU
 #define SIMULATION_SPEED 8e3  // how speedy is the simulation, compared to reality
 #define COLLISION true  // set to false for avoid collisions
+
+/**
+ * Next are defined some debug flags, enabling some debug behaviors, useful for debugging or logging
+ */
+// show distance to the Astre named "sun", maximal, minimal and diff.
+// can be used for show modifications of orbits.
+#define DEBUG_SUN_DIST true
 
 /**
  * Next are defined constants that are immutable, relative to
@@ -16,7 +23,7 @@
  */
 // conversion units
 #define METER_PER_KILOMETER 1e3
-#define KILOMETER_PER_METER 1e-3
+#define KILOMETER_PER_METER 1./KILOMETER_PER_METER
 // graviationnal constant. The one.
 // NB: The simulation speed has a direct impact on it.
 //     The speedy the simulation, the higher should be G

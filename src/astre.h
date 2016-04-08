@@ -44,7 +44,9 @@ namespace eng {
         bool visible;
         bool nullified;
         std::string name;
-        double dist_to_sun_min, dist_to_sun_max; // debug
+#if DEBUG_SUN_DIST
+        double dist_to_sun_min, dist_to_sun_max;
+#endif
         QColor color;
 
     };
