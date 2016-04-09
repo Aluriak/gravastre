@@ -25,6 +25,17 @@ void eng::Engine::add_astre(double mass, double pos_x, double pos_y,
 }
 
 
+void eng::Engine::spawn(System& system, double anchor_x, double anchor_y) {
+    Astre* astre = system.getAstre();
+    astre->addX(anchor_x);
+    astre->addY(anchor_y);
+    this->astres.push_back(astre);
+    for(auto subsystem : system.getSubsystems()) {
+        this->spawn(*subsystem, anchor_x, anchor_y);
+    }
+}
+
+
 void eng::Engine::update() {
     //std::cout << "engine updated !" << std::endl;
     std::list<Astre*>::iterator it_astres = this->astres.begin();

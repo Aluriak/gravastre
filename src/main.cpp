@@ -2,6 +2,7 @@
 #include <iostream>
 #include "engine.h"
 #include "view.h"
+#include "system.h"
 
 // random number generator intialization
 #include <random>
@@ -16,7 +17,10 @@ int main(int argc, char *argv[]) {
 
     bool do_solarsystem = true;
     //do_solarsystem = false;
-    if(do_solarsystem) {
+    if(argc > 1) {
+        eng::System* system = eng::System::from_json(argv[1])[0];
+        engine.spawn(*system);
+    } else if(do_solarsystem) {
         // init solar system example
         //                   mass,   X,   Y, speedX, speedY,      name, color
         engine.add_astre(   2e30,    1,   1,      0,      0,     "sun", Qt::yellow);

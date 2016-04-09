@@ -6,6 +6,7 @@
 #include <cmath>
 #include "converters.h"
 #include "astre.h"
+#include "system.h"
 
 
 
@@ -18,6 +19,7 @@ namespace eng {
         //Engine();
         void add_astre(double, double, double, double, double,
                        std::string="unamed", QColor=Qt::white);
+        void spawn(System&, double=1., double=1.);
         void update();
         void clear_all();
 
