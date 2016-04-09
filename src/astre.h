@@ -24,6 +24,8 @@ namespace eng {
         std::string getName() const { return this->name; }
         double getX() const { return this->position_x; }
         double getY() const { return this->position_y; }
+        void addX(double offset) { this->position_x += offset; }
+        void addY(double offset) { this->position_y += offset; }
         double getRadius() const { return this->radius; }
         QColor getColor() const { return this->color; }
 

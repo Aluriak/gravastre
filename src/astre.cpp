@@ -54,7 +54,6 @@ void eng::Astre::accelerateTo(eng::Astre* const othr, const double dist) {
         othr->dist_to_sun_max = dist;
     }
 
-    // DEBUG testing  (NB: these lines modify the other astre)
     if(this->name == "sun") {
         if(dist < othr->dist_to_sun_min) othr->dist_to_sun_min = dist;
         if(dist > othr->dist_to_sun_max) othr->dist_to_sun_max = dist;
