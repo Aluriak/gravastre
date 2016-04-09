@@ -1,0 +1,39 @@
+[{
+    "name": "sun",
+    "mass": 2e30,
+    "speed": [0, 0],
+    "color": [255, 255, 0],
+    "satellites": [{
+            "name": "mercure",
+            "mass": 3.3e23,
+            "speed": [0, 47.15],
+            "color": [128, 128, 128],
+            "distance": 0.38
+        },{
+            "name": "venus",
+            "mass": 4.87e24,
+            "speed": [0, 35.15],
+            "color": [170, 165, 141],
+            "distance": 0.72
+        },{
+            "name": "earth",
+            "mass": 5.98e24,
+            "speed": [0, 29.82],
+            "color": [0, 0, 255],
+            "distance": 1,
+            "satellites": [{
+                "name": "moon",
+                "mass": 7.34e22,
+                "speed": [0, 30.82],
+                "color": [255, 255, 255],
+                "distance": 0.00257
+            }]
+        },{
+            "name": "mars",
+            "mass": 5.98e24,
+            "speed": [0, 24.35],
+            "color": [255, 0, 0],
+            "distance": 1.5
+        }
+    ]
+}]
