@@ -20,6 +20,7 @@
 #define DEBUG_DISTANCES_LOGS false
 #define DEBUG_NULLIFIED_LOGS false
 #define DEBUG_ABSORBED_LOGS false
+#define DEBUG_JSON_PARSING_LOGS false
 
 /**
  * Next are defined constants that are immutable, relative to
