@@ -8,10 +8,13 @@ QMAKE_CXXFLAGS += -std=c++11
 SOURCES += src/main.cpp \
     src/astre.cpp \
     src/engine.cpp \
+    src/system.cpp \
     src/view.cpp
 
 HEADERS += \
     src/converters.h \
     src/astre.h \
     src/engine.h \
-    src/view.h
+    src/system.h \
+    src/view.h \
+    src/utils.h
