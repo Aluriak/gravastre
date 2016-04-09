@@ -18,6 +18,12 @@ Then, go to build dir, build the project and launch it:
     make
     ./gravastre
 
+It's also possible to launch gravastre using a system defined in JSON file:
+
+    ./gravastre mysystem.json
+
+Take a look to `data/` directory for JSON file example.
+
 
 ## Interactions
 Currently, some interactions are implemented:
@@ -30,13 +36,18 @@ Currently, some interactions are implemented:
     - o/p: decrease or increase the new astre initial speed sensitivity
     - space: recenter to the default view
 
-Before compilation, you may want to take a look to:
+After playing, you may want to take a look to:
 - main.cpp, where the initial system is defined
 - converters.h, where some constants including collision presence, pixel per UA and simulation speed are defined
 
 
+You can also define your own systems using the JSON format.
+See [`data/`](https://github.com/Aluriak/gravastre/tree/master/data) and [usage](https://github.com/Aluriak/gravastre#usage).
+
+
 ## Features
 - [X] complete and personalisable simulation
+- [X] JSON configuration of systems
 - [ ] zoom and translation in the world
 - [ ] astre selection
 - [ ] astre realistic radius + token for replace astre when too far
