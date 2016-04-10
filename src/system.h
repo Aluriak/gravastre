@@ -12,19 +12,6 @@
 #include "astre.h"
 
 
-/**
- * JSON related constants
- */
-#define SYSTEM_JSON_KEY_NAME "name"
-#define SYSTEM_JSON_KEY_MASS "mass"
-#define SYSTEM_JSON_KEY_SPEED "speed"
-#define SYSTEM_JSON_KEY_COLOR "color"
-#define SYSTEM_JSON_KEY_SATELLITES "satellites"
-#define SYSTEM_JSON_KEY_DISTANCE "distance"
-
-
-
-
 namespace eng {
 
     /**
