@@ -48,6 +48,8 @@ See [`data/`](https://github.com/Aluriak/gravastre/tree/master/data) and [usage]
 ## Features
 - [X] complete and personalisable simulation
 - [X] JSON configuration of systems
+- [ ] System: specify speed as double, not pair of double, and randomly place in orbit the subsystems
+- [ ] System,JSON: allow specifying an excentricity for the orbit, or any combination of valid parameters
 - [ ] zoom and translation in the world
 - [ ] astre selection
 - [ ] astre realistic radius + token for replace astre when too far
