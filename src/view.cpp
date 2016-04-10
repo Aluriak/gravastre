@@ -3,7 +3,7 @@
 
 
 view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
-                         engine(engine), QWidget(parent) {
+                         QWidget(parent), engine(engine) {
     this->placement_line.setLine(0,0,0,0);
     this->setMouseTracking(true);
     this->selected_mass = 1e3;
