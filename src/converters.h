@@ -33,7 +33,8 @@
 // NB: The simulation speed has a direct impact on it.
 //     The speedy the simulation, the higher should be G
 //     for keep the mathematic equations cohesion.
-#define GRAVITATIONNAL_CONSTANT 6.67e-11*SIMULATION_SPEED
+#define PHYSIC_GRAVITATIONNAL_CONSTANT 6.67384e-11
+#define GRAVITATIONNAL_CONSTANT PHYSIC_GRAVITATIONNAL_CONSTANT*SIMULATION_SPEED
 // AU: Astronomic Unit, about 150 000 000 kilometers
 #define METER_PER_AU 150e9
 #define AU_PER_METER 1./METER_PER_AU
@@ -107,4 +108,6 @@ namespace unit {
     inline double attraction_force_meter(double mass1, double mass2, double meter_dist) {
         return - GRAVITATIONNAL_CONSTANT * mass1 * mass2 / (meter_dist*meter_dist);
     }
-}
+
+} // namespace unit
+
