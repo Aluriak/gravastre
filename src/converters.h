@@ -28,7 +28,7 @@
  */
 // conversion units
 #define METER_PER_KILOMETER 1e3
-#define KILOMETER_PER_METER 1./KILOMETER_PER_METER
+#define KILOMETER_PER_METER 1./METER_PER_KILOMETER
 // graviationnal constant. The one.
 // NB: The simulation speed has a direct impact on it.
 //     The speedy the simulation, the higher should be G
@@ -67,6 +67,9 @@ namespace unit {
     }
     inline double kilometer_to_meter(double km) {
         return km * METER_PER_KILOMETER;
+    }
+    inline double meter_to_kilometer(double km) {
+        return km * KILOMETER_PER_METER;
     }
 
     inline double pixel_to_au(double px) {
