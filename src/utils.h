@@ -19,14 +19,14 @@
 #define SYSTEM_JSON_KEY_COLOR "color"
 #define SYSTEM_JSON_KEY_RADIUS "radius"
 #define SYSTEM_JSON_KEY_SATELLITES "satellites"
-// Orbital data
-#define SYSTEM_JSON_KEY_SPEED "speed"
-#define SYSTEM_JSON_KEY_DISTANCE "distance"
-#define SYSTEM_JSON_KEY_APOAPSIS "apoapsis"
-#define SYSTEM_JSON_KEY_PERIAPSIS "periapsis"
-#define SYSTEM_JSON_KEY_ECCENTRICITY "eccentricity"
-#define SYSTEM_JSON_KEY_SEMIMAJORAXIS "semimajoraxis"
-#define SYSTEM_JSON_KEY_SEMIMINORAXIS "semiminoraxis"
+// Orbital data (and expected units)
+#define SYSTEM_JSON_KEY_SPEED "speed"  // m.s-1
+#define SYSTEM_JSON_KEY_DISTANCE "distance"  // AU
+#define SYSTEM_JSON_KEY_APOAPSIS "apoapsis"  // AU
+#define SYSTEM_JSON_KEY_PERIAPSIS "periapsis"  // AU
+#define SYSTEM_JSON_KEY_ECCENTRICITY "eccentricity"  // no unit, 0 < e <= 1
+#define SYSTEM_JSON_KEY_SEMIMAJORAXIS "semimajoraxis"  // AU
+#define SYSTEM_JSON_KEY_SEMIMINORAXIS "semiminoraxis"  // AU
 
 
 /**
