@@ -9,6 +9,7 @@ SOURCES += src/main.cpp \
     src/astre.cpp \
     src/engine.cpp \
     src/system.cpp \
+    src/orbit.cpp \
     src/view.cpp
 
 HEADERS += \
@@ -16,5 +17,6 @@ HEADERS += \
     src/astre.h \
     src/engine.h \
     src/system.h \
+    src/orbit.h \
     src/view.h \
     src/utils.h
