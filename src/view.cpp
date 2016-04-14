@@ -11,7 +11,6 @@ view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
     this->setMouseTracking(true);
     this->setTransformationAnchor(QGraphicsView::NoAnchor);
     this->scene->setBackgroundBrush(QBrush(Qt::black));
-    std::cerr << this->width() << "x" << this->height() << std::endl;
     this->setSceneRect(
         -this->width(),
         -this->height(),
