@@ -91,6 +91,56 @@ void view::Universe::translate(double x, double y) {
     );
 }
 
+//void view::Universe::paintEvent(QPaintEvent*) {
+    //QPen default_pen(Qt::transparent);
+    //QPainter painter(this);
+    //painter.setBrush(QBrush(Qt::black));  // fill color
+    //painter.setPen(default_pen);  // outline color
+    //painter.drawRect(rect());
+    //painter.translate(this->drag_translation_x, this->drag_translation_y);
+
+    //if(this->drag_placement) {
+        //painter.setPen(QPen(Qt::blue));
+        //painter.drawLine(this->placement_line);
+        //painter.setPen(default_pen);
+    //}
+
+    //// print astres
+    //QPoint astre_center;
+    ////eng::Engine::AstreIterator it = this->engine.begin();
+    ////for(; it != this->engine.end() ; it++) {
+    //for(auto it : this->engine.getAstres()) {
+        //eng::Astre* astre = it;
+        //astre_center.setX(unit::au_to_pixel(astre->getX()));
+        //astre_center.setY(unit::au_to_pixel(astre->getY()));
+        //painter.setBrush(QBrush(astre->getColor()));  // fill color
+        //painter.setPen(QPen(Qt::transparent));  // outline color
+        //painter.drawEllipse(
+            //astre_center,
+            //(int)astre->getRadius(),
+            //(int)astre->getRadius()
+        //);
+//#if VIEW_INITIAL_POSITION
+        //painter.setBrush(QBrush(Qt::red));  // fill color
+        //painter.setPen(QPen(Qt::red));  // outline color
+        //painter.drawEllipse(QPoint(unit::au_to_pixel(astre->getInitX()),
+                            //unit::au_to_pixel(astre->getInitY())), 2, 2);
+//#endif
+//#if VIEW_ORBITAL_TRAJECTORY
+        //if(astre->haveTrajectory() != NULL) {
+            //const int OFFSET = 1;  // center of all trajectories printing
+            //painter.setBrush(QBrush(Qt::transparent));  // fill color
+            //painter.setPen(QPen(Qt::blue));  // outline color
+            //painter.drawEllipse(
+                //QPoint(unit::au_to_pixel(OFFSET), unit::au_to_pixel(OFFSET)),
+                //(int)unit::meter_to_pixel(astre->getTrajectory().getWidth()),
+                //(int)unit::meter_to_pixel(astre->getTrajectory().getHeight())
+            //);
+        //}
+//#endif
+    //}
+//}
+
 
 void view::Universe::mousePressEvent(QMouseEvent* event) {
     //std::cout << "Clic detected at:" << std::endl
