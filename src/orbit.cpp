@@ -1,6 +1,19 @@
 #include "orbit.h"
 
 
+orbit::OrbitalTrajectory::OrbitalTrajectory() {
+    have_mass = false;
+    have_parent_mass = false;
+    have_distance = false;
+    have_speed = false;
+    have_apoapsis = false;
+    have_periapsis = false;
+    have_eccentricity = false;
+    have_semimajoraxis = false;
+    have_semiminoraxis = false;
+}
+
+
 orbit::OrbitalTrajectory::OrbitalTrajectory(QJsonObject data, double* parent_mass_) {
     have_mass = data[SYSTEM_JSON_KEY_MASS].isDouble();
     have_parent_mass = parent_mass_ != NULL;

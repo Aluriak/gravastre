@@ -132,6 +132,7 @@ struct OrbitalTrajectory {
          have_apoapsis, have_periapsis, have_eccentricity,
          have_semimajoraxis, have_semiminoraxis;
 
+    OrbitalTrajectory();
     OrbitalTrajectory(QJsonObject data, double* =NULL);
 
 
