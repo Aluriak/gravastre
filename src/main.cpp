@@ -16,8 +16,11 @@ int main(int argc, char *argv[]) {
     bool do_solarsystem = true;
     //do_solarsystem = false;
     if(argc > 1) {
-        eng::System* system = eng::System::from_json(argv[1])[0];
-        engine.spawn(*system);
+        std::vector<eng::System*> systems = eng::System::from_json(argv[1]);
+        for(auto system : systems) {
+            engine.spawn(*system, std::make_tuple(1, 1));
+        }
+
     } else if(do_solarsystem) {
         // init solar system example
         //                   mass,   X,   Y, speedX, speedY,      name, color
