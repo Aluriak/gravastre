@@ -11,12 +11,6 @@ view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
     this->setMouseTracking(true);
     this->setTransformationAnchor(QGraphicsView::NoAnchor);
     this->scene->setBackgroundBrush(QBrush(Qt::black));
-    this->setSceneRect(
-        -this->width(),
-        -this->height(),
-        this->width() * 3.,
-        this->height() * 3.
-    );
     // Items config
     this->reference.setRect(-2, -2, 4, 4);
     this->reference.setPos(0, 0);
@@ -71,9 +65,17 @@ void view::Universe::add_astre(eng::Astre* astre) {
 void view::Universe::update_engine() {
     if(not this->pause) {
         this->engine.update();
+        // View is centered on selected object
         if(this->follow_selection) {
-            this->centerOn(this->selected_object->pos().x(),
-                           this->selected_object->pos().y());
+            double x = this->selected_object->pos().x(),
+                   y = this->selected_object->pos().y();
+            this->setSceneRect(
+                x - (double)this->width()  / 2.,
+                y - (double)this->height() / 2.,
+                x + (double)this->width() * 2.5,
+                y + (double)this->height() * 2.5
+            );
+            this->centerOn(x, y);
         }
     }
     this->update();
