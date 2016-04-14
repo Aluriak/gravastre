@@ -1,5 +1,5 @@
 # Gravastre
-C++/Qt rewriting of [Gravastre-2.0](https://github.com/Aluriak/Gravastre-2.0).
+C++/Qt5 rewriting of [Gravastre-2.0](https://github.com/Aluriak/Gravastre-2.0).
 
 
 ## Main idea
@@ -11,6 +11,9 @@ The Qt interface allow user to see and play with the simulation during the compu
 First, you will have to generate the builder Makefile:
 
     make
+
+(on some systems, `qmake-qt5` replace `qmake`. On failure, detect which is the correct typo
+and modify the [Makefile](https://github.com/Aluriak/gravastre/blob/master/Makefile#L5) accordingly)
 
 Then, go to build dir, build the project and launch it:
 
