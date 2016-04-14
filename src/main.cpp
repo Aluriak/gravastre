@@ -6,8 +6,6 @@
 
 // random number generator intialization
 #include <random>
-std::random_device random_rd;     // only used once to initialise (seed) engine
-std::mt19937 random_gen(random_rd());    // random-number engine used (Mersenne-Twister in this case)
 
 
 int main(int argc, char *argv[]) {
@@ -35,6 +33,8 @@ int main(int argc, char *argv[]) {
         std::cout << "    METER_PER_PIXEL = " << METER_PER_PIXEL << std::endl;
         std::cout << "    PIXEL_PER_METER = " << PIXEL_PER_METER << std::endl;
     } else {
+        std::random_device random_rd;     // only used once to initialise (seed) engine
+        std::mt19937 random_gen(random_rd());    // random-number engine used (Mersenne-Twister in this case)
         std::uniform_int_distribution<int> distribution_pos(0,200);
         std::uniform_int_distribution<int> distribution_spd(-3,3);
         std::uniform_int_distribution<int> distribution_mass(10,18);
