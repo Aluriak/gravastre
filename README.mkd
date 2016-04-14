@@ -33,8 +33,9 @@ Currently, some interactions are implemented:
 - Keyboard:
     - i/e: decrease or increase mass of next created astres
     - d: clear all universe
-    - o/p: decrease or increase the new astre initial speed sensitivity
-    - space: recenter to the default view
+    - a/u: decrease or increase the new astre initial speed sensitivity
+    - p: pausing simulation
+    - space: recenter to and track the selected astre
 
 After playing, you may want to take a look to:
 - main.cpp, where the initial system is defined

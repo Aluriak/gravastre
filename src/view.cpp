@@ -195,12 +195,15 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
     } else if(event->key() == Qt::Key_D) {
         std::cout << "universe cleared !" << std::endl;
         this->engine.clear_all();
-    } else if(event->key() == Qt::Key_O) {
+    } else if(event->key() == Qt::Key_U) {
         this->selected_speed *= 10;
         std::cout << "selected speed increased to " << this->selected_speed << std::endl;
-    } else if(event->key() == Qt::Key_P) {
+    } else if(event->key() == Qt::Key_A) {
         this->selected_speed /= 10;
         std::cout << "selected speed decreased to " << this->selected_speed << std::endl;
+    } else if(event->key() == Qt::Key_P) {
+        this->togglePause();
+        std::cout << (this->pause?"Paused":"Running") << std::endl;
     } else if(event->key() == Qt::Key_Space) {
         this->reference.setPos(0, 0);
         this->follow_selection = true;
