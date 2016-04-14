@@ -25,11 +25,11 @@ int main(int argc, char *argv[]) {
         // init solar system example
         //                   mass,   X,   Y, speedX, speedY,      name, color
         engine.add_astre(   2e30,    1,   1,      0,      0,     "sun", Qt::yellow);
-        engine.add_astre( 3.3e23, 1.38,   1,      0,  47.15, "mercure", Qt::darkGray);
-        engine.add_astre(4.87e24, 1.72,   1,      0,  35.15,   "venus", Qt::darkYellow);
-        engine.add_astre(5.98e24,    2,   1,      0,  29.82,   "earth", Qt::blue);
-        engine.add_astre(7.34e22,2.00257, 1,      0,  30.82,    "moon", Qt::white);
-        engine.add_astre(5.98e24,  2.5,   1,      0,  24.35,    "mars", Qt::red);
+        engine.add_astre( 3.3e23, 1.38,   1,      0,  47150, "mercure", Qt::darkGray);
+        engine.add_astre(4.87e24, 1.72,   1,      0,  35150,   "venus", Qt::darkYellow);
+        engine.add_astre(5.98e24,    2,   1,      0,  29820,   "earth", Qt::blue);
+        engine.add_astre(7.34e22,2.00257, 1,      0,  30820,    "moon", Qt::white);
+        engine.add_astre(5.98e24,  2.5,   1,      0,  24350,    "mars", Qt::red);
         std::cout << "KILOMETER_PER_PIXEL = " << KILOMETER_PER_PIXEL << std::endl;
         std::cout << "PIXEL_PER_KILOMETER = " << PIXEL_PER_KILOMETER << std::endl;
         std::cout << "   KILOMETER_PER_AU = " << KILOMETER_PER_AU << std::endl;
