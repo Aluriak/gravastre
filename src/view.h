@@ -1,46 +1,61 @@
 #pragma once
 
 
+#include <iostream>
+#include <tuple>
+
 #include <QWidget>
-#include <QPainter>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsLineItem>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QTimer>
-#include <iostream>
+#include <QLineF>
+#include <QList>
+
 #include "engine.h"
 #include "astre.h"
+#include "system.h"
+
 
 
 namespace view {
 
-    class Universe : public QWidget {
+    class Universe : public QGraphicsView {
     Q_OBJECT
 
     public slots:
         void update_engine();
+        void translate(double x, double y);
 
     public:
-        Universe(eng::Engine&, QWidget *parent = 0);
+        Universe(eng::Engine&, QWidget* parent=NULL);
+        void add_astre(eng::Astre*);
+        void add_astre(double, double, double, double, double);
+        void togglePause() { this->pause = not this->pause; }
 
-        virtual void paintEvent(QPaintEvent*);
         virtual void mousePressEvent(QMouseEvent*);
         virtual void mouseMoveEvent(QMouseEvent*);
         virtual void mouseReleaseEvent(QMouseEvent*);
+        virtual void wheelEvent(QWheelEvent*);
         virtual void keyPressEvent(QKeyEvent*);
 
-    private:
-        QPoint global_to_relative(const QPoint& point) const;
-        QPoint global_to_relative(const QPointF& point) const;
 
-        QLine placement_line;
-        QPainter painter;
+    private:
+        QGraphicsScene* scene;
+        QGraphicsRectItem reference;  // Parent of all other scene items (astre, lines,…).
+                                      // Needed to perform translation.
+        QGraphicsLineItem placement_line;
         QTimer update_call;
-        bool drag_placement, drag_translation;
         double drag_translation_x, drag_translation_y;
-        double space_ref_x, space_ref_y;
+        QGraphicsItem* selected_object;
         double selected_mass;
         double selected_speed;  // the bigger is, the speedy will be the new astre
         eng::Engine& engine;
+        bool pause = false;  // true: no engine update
+        bool follow_selection = false;  // true: keep selected object in view center
 
     };
 

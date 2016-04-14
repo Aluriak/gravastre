@@ -3,57 +3,93 @@
 
 
 view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
-                         QWidget(parent), engine(engine) {
-    this->placement_line.setLine(0,0,0,0);
+                         QGraphicsView(parent), engine(engine) {
+    // Scene config
+    this->scene = new QGraphicsScene;
+    this->setScene(this->scene);
+    this->setInteractive(true);
     this->setMouseTracking(true);
+    this->setTransformationAnchor(QGraphicsView::NoAnchor);
+    this->scene->setBackgroundBrush(QBrush(Qt::black));
+    std::cerr << this->width() << "x" << this->height() << std::endl;
+    this->setSceneRect(
+        -this->width(),
+        -this->height(),
+        this->width() * 3.,
+        this->height() * 3.
+    );
+    // Items config
+    this->reference.setRect(-2, -2, 4, 4);
+    this->reference.setPos(0, 0);
+    this->reference.setBrush(QBrush(Qt::white));
+    this->reference.setPen(QPen(Qt::white));
+    this->reference.setVisible(VIEW_VISIBLE_REFERENCE);
+    this->placement_line.setPen(QPen(Qt::blue));
+    this->placement_line.setVisible(false);
+    this->placement_line.setParentItem(&this->reference);
+    this->scene->addItem(&reference);
+    this->selected_object = &this->reference;
+
+    // Register all Astre as graphic object, prepare the view.
+    eng::Astre* maximal_mass = NULL;  // will center the view on the heavier astre
+    for(auto astre : this->engine.getAstres()) {
+        this->add_astre(astre);
+        if(maximal_mass == NULL or astre->getMass() > maximal_mass->getMass()) {
+            maximal_mass = astre;
+        }
+    }
+    if(maximal_mass != NULL) {
+        //this->centerOn(maximal_mass->getX(), maximal_mass->getY());
+    }
+    this->centerOn(0, 0);
+
+    // Data
     this->selected_mass = 1e3;
     this->selected_speed = 1e-1;
-    this->drag_placement = false;  // true when a new Astre is in placement
-    this->drag_translation = false;  // true when holding right button pressed
     this->drag_translation_x = 0.;
     this->drag_translation_y = 0.;
-    this->space_ref_x = 0.;
-    this->space_ref_y = 0.;
-    // configure the timer
+
+    // Configure the timer
     connect(&this->update_call, SIGNAL(timeout()), this, SLOT(update_engine()));
     update_call.start(1);
     update_engine();
 }
 
 
-void view::Universe::update_engine() {
-    this->engine.update();
-    update();
+/**
+ * Add a new Astre with given data in engine, and give it a view.
+ */
+void view::Universe::add_astre(double mass, double x, double y, double vx, double vy) {
+    this->add_astre(this->engine.add_astre(mass, x, y, vx, vy));
+}
+void view::Universe::add_astre(eng::Astre* astre) {
+    astre->setParentItem(&this->reference);
 }
 
 
-void view::Universe::paintEvent(QPaintEvent*) {
-    QPen default_pen(Qt::transparent);
-    QPainter painter(this);
-    painter.setBrush(QBrush(Qt::black));  // fill color
-    painter.setPen(default_pen);  // outline color
-    painter.drawRect(rect());
-    painter.translate(this->drag_translation_x, this->drag_translation_y);
-
-    if(this->drag_placement) {
-        painter.setPen(QPen(Qt::blue));
-        painter.drawLine(this->placement_line);
-        painter.setPen(default_pen);
+/**
+ * [SLOT] Compute the next step and print it.
+ */
+void view::Universe::update_engine() {
+    if(not this->pause) {
+        this->engine.update();
+        if(this->follow_selection) {
+            this->centerOn(this->selected_object->pos().x(),
+                           this->selected_object->pos().y());
+        }
     }
+    this->update();
+    this->scene->update();
+}
 
-    // print astres
-    QPoint astre_center;
-    eng::Engine::AstreIterator it = this->engine.begin();
-    for(; it != this->engine.end() ; it++) {
-        astre_center.setX(unit::au_to_pixel((*it)->getX()));
-        astre_center.setY(unit::au_to_pixel((*it)->getY()));
-        painter.setBrush(QBrush((*it)->getColor()));
-        painter.drawEllipse(
-            astre_center,
-            (int)(*it)->getRadius(),
-            (int)(*it)->getRadius()
-        );
-    }
+/**
+ * [SLOT] Translate all scene items.
+ */
+void view::Universe::translate(double x, double y) {
+    this->reference.moveBy(
+        (VIEW_REVERSED_TRANSLATION? -1:1) * x * VIEW_TRANSLATION_RATIO,
+        (VIEW_REVERSED_TRANSLATION? -1:1) * y * VIEW_TRANSLATION_RATIO
+    );
 }
 
 
@@ -64,49 +100,88 @@ void view::Universe::mousePressEvent(QMouseEvent* event) {
               //<< "\tevent->globalPos():" << event->globalPos().x() << ";" << event->globalPos().y() << std::endl
               //<< "\tevent->screenPos():" << event->screenPos().x() << ";" << event->screenPos().y() << std::endl
               //<< "\tevent->windowPos():" << event->windowPos().x() << ";" << event->windowPos().y() << std::endl
+              //<< "\tScreen:" << event->screenPos().x() << ";" << event->screenPos().y() << std::endl
+              //<< "\tScene:" << scene_coords.x() << ";" << scene_coords.y() << std::endl
               //<< "\tEND"  << std::endl;
-    if(event->button() == Qt::LeftButton) {
-        this->placement_line.setP1(event->pos());
-        this->placement_line.setP2(event->pos());
-        this->drag_placement = true;
-    } else if(event->button() == Qt::RightButton) {
-        this->drag_translation = true;
-        this->space_ref_x = event->x();  // anchor point for
-        this->space_ref_y = event->y();  // translations
-        update();
+#if VIEW_DETAILS_ON_MOUSE_CLIC
+    bool astre_found = false;
+    //for(auto it : this->engine.getAstres()) {
+    //}  // TODO
+    if(not astre_found) {
+#else
+    if(true) {
+#endif
+        QPointF scene_coords = this->mapToScene(QPoint(event->x(), event->y()));
+        if(event->button() == Qt::LeftButton) {
+            QGraphicsItem* clicked = this->scene->itemAt(scene_coords, QTransform());
+            if(clicked == NULL) {
+                this->placement_line.setVisible(true);
+                this->placement_line.setLine(
+                    scene_coords.x() - this->reference.pos().x(),
+                    scene_coords.y() - this->reference.pos().y(),
+                    scene_coords.x() - this->reference.pos().x(),
+                    scene_coords.y() - this->reference.pos().y()
+                );
+            } else { // an item was clicked
+                this->selected_object = clicked;
+            }
+        } else if(event->button() == Qt::RightButton) {
+            this->drag_translation_x = scene_coords.x();
+            this->drag_translation_y = scene_coords.y();
+        }
     }
+    // Call default implementation, to propagate to the graphicsitems.
+    QGraphicsView::mousePressEvent(event);
 }
 
 
 void view::Universe::mouseMoveEvent(QMouseEvent* event) {
-    if(this->drag_placement) {
-        this->placement_line.setP2(Universe::global_to_relative(event->pos()));
-        update();
-    } else if(this->drag_translation) {
-        this->drag_translation_x += event->x() - this->space_ref_x;
-        this->drag_translation_y += event->y() - this->space_ref_y;
-        this->space_ref_x = event->x();
-        this->space_ref_y = event->y();
+    QPointF scene_coords = this->mapToScene(QPoint(event->x(), event->y()));
+    if(this->placement_line.isVisible()) {
+        this->placement_line.setLine(
+            this->placement_line.line().x1(),
+            this->placement_line.line().y1(),
+            scene_coords.x() - this->reference.pos().x(),
+            scene_coords.y() - this->reference.pos().y()
+        );
+    } else if(event->buttons() & Qt::RightButton) {
+        this->translate(scene_coords.x() - this->drag_translation_x,
+                        scene_coords.y() - this->drag_translation_y);
+        this->drag_translation_x = scene_coords.x();
+        this->drag_translation_y = scene_coords.y();
     }
+    // Call default implementation
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 
 void view::Universe::mouseReleaseEvent(QMouseEvent* event) {
-    if(event->button() == Qt::LeftButton) {
-        double speed_x = this->placement_line.x2() - this->placement_line.x1();
-        double speed_y = this->placement_line.y2() - this->placement_line.y1();
-        this->engine.add_astre(
+    if(event->button() == Qt::LeftButton && this->placement_line.isVisible()) {
+        this->placement_line.setVisible(false);
+        QLineF line = this->placement_line.line();
+        double speed_x = line.x2() - line.x1();
+        double speed_y = line.y2() - line.y1();
+        this->add_astre(
             this->selected_mass,
-            unit::pixel_to_au(this->placement_line.x1()),
-            unit::pixel_to_au(this->placement_line.y1()),
-            this->selected_speed * speed_x,
-            this->selected_speed * speed_y
+            unit::pixel_to_au(line.x1()),
+            unit::pixel_to_au(line.y1()),
+            unit::kilometer_to_meter(this->selected_speed * speed_x),
+            unit::kilometer_to_meter(this->selected_speed * speed_y)
         );
-        this->placement_line.setLine(0,0,0,0);
-        this->drag_placement = false;
-        update();
-    } else if(event->button() == Qt::RightButton) {
-        this->drag_translation = false;
+        this->placement_line.setVisible(false);
+    }
+    // Call default implementation
+    QGraphicsView::mouseReleaseEvent(event);
+}
+
+
+void view::Universe::wheelEvent(QWheelEvent* event) {
+    this->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    double scaleFactor = 1.15;
+    if (event->delta()>0) {
+        this->scale(scaleFactor,scaleFactor);
+    } else {
+        this->scale (1. / scaleFactor, 1. / scaleFactor);
     }
 }
 
@@ -128,17 +203,7 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
         this->selected_speed /= 10;
         std::cout << "selected speed decreased to " << this->selected_speed << std::endl;
     } else if(event->key() == Qt::Key_Space) {
-        this->drag_translation_x = this->drag_translation_y = 0.;
-        std::cout << "universe centered !" << std::endl;
+        this->reference.setPos(0, 0);
+        this->follow_selection = true;
     }
-}
-
-
-QPoint view::Universe::global_to_relative(const QPoint& point) const {
-    return QPoint(point.x() + this->drag_translation_x,
-                  point.y() + this->drag_translation_y);
-}
-QPoint view::Universe::global_to_relative(const QPointF& point) const {
-    return QPoint(point.x() + this->drag_translation_x,
-                  point.y() + this->drag_translation_y);
 }
