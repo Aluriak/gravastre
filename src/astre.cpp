@@ -2,11 +2,44 @@
 
 
 eng::Astre::Astre(double mass, double radius, double pos_x, double pos_y,
-                  double speed_x, double speed_y, std::string name, QColor color) {
+                  double speed_x, double speed_y, std::string name, QColor color) :
+    QGraphicsEllipseItem(-radius, -radius, radius, radius)
+{
+    this->init_attributes(mass, radius, pos_x, pos_y, speed_x, speed_y, name, color);
+}
+
+// Version without radius: deduce radius from mass
+eng::Astre::Astre(double mass, double pos_x, double pos_y,
+                  double speed_x, double speed_y, std::string name, QColor color) :
+
+    QGraphicsEllipseItem(-radius, -radius, radius, radius)
+{
+    this->init_attributes(mass, Astre::mass_to_radius(mass),
+                          pos_x, pos_y, speed_x, speed_y, name, color);
+}
+
+
+eng::Astre::~Astre() {
+#if DATA_ASTRE_HOLDS_TRAJECTORY
+    if(this->trajectory != NULL) { delete this->trajectory; }
+#endif
+}
+
+
+/**
+ * PRIVATE: Initialize fields. Called by constructors.
+ */
+void eng::Astre::init_attributes(double mass, double radius, double pos_x,
+                                 double pos_y, double speed_x, double speed_y,
+                                 std::string name, QColor color) {
     this->mass = mass;
     this->radius = radius;
     this->position_x = pos_x;
     this->position_y = pos_y;
+#if VIEW_INITIAL_POSITION
+    this->init_position_x = pos_x;
+    this->init_position_y = pos_y;
+#endif
     this->speed_x = speed_x;
     this->speed_y = speed_y;
     this->accel_x = 0.;
@@ -21,8 +54,11 @@ eng::Astre::Astre(double mass, double radius, double pos_x, double pos_y,
     dist_to_sun_min = -1;
     dist_to_sun_max = -1;
 #endif
+    // Graphics
+    this->setBrush(QBrush(color));  // fill color
+    this->setPen(QPen(color));  // outline color
+    //this->setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
-
 
 
 void eng::Astre::update() {
@@ -35,6 +71,11 @@ void eng::Astre::update() {
     // prepare the next step
     this->accel_x = 0;
     this->accel_y = 0;
+    // Graphic
+    this->setPos(
+        unit::au_to_pixel(this->position_x),
+        unit::au_to_pixel(this->position_y)
+    );
 }
 
 
@@ -109,14 +150,20 @@ double eng::Astre::distTo(const Astre* const othr) const {
     return dist;
 }
 
+
+/**
+ * [GRAPHICS] Callback when the Astre is clicked.
+ */
+void eng::Astre::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+    std::cerr << "Clic on " << this->getName() << std::endl;
+
+}
+
+
 bool eng::Astre::collide(const Astre* const othr, const double dist) const {
-#if COLLISION
     double min_separation = this->radius + othr->radius;
 #if DEBUG_COLLISION_LOGS
     std::cout << "Collision: " << min_separation << "\tdist: " << dist <<  std::endl;
 #endif
     return unit::au_to_pixel(dist) <= min_separation;
-#else
-    return false;
-#endif
 }
