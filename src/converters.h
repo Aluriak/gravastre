@@ -1,26 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include "options.h"
 
-
-/**
- * Next are defined constants that depends of the expected simulation behavior
- */
-#define PIXEL_PER_AU 300  // number of pixel representing an AU
-#define SIMULATION_SPEED 8e3  // how speedy is the simulation, compared to reality
-#define COLLISION true  // set to false for avoid collisions
-
-/**
- * Next are defined some debug flags, enabling some debug behaviors, useful for debugging or logging
- */
-// show distance to the Astre named "sun", maximal, minimal and diff.
-// can be used for show modifications of orbits.
-#define DEBUG_SUN_DIST true
-#define DEBUG_COLLISION_LOGS false
-#define DEBUG_DISTANCES_LOGS false
-#define DEBUG_NULLIFIED_LOGS false
-#define DEBUG_ABSORBED_LOGS false
-#define DEBUG_JSON_PARSING_LOGS false
 
 /**
  * Next are defined constants that are immutable, relative to

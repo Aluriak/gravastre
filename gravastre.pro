@@ -19,4 +19,5 @@ HEADERS += \
     src/system.h \
     src/orbit.h \
     src/view.h \
-    src/utils.h
+    src/utils.h \
+    src/options.h
