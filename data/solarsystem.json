@@ -3,7 +3,7 @@
     "mass": 2e30,
     "color": [255, 255, 0],
     "satellites": [{
-            "name": "mercure",
+            "name": "mercury",
             "mass": 3.3e23,
             "eccentricity": 0.20563069,
             "semimajoraxis": 0.38709893,
@@ -33,6 +33,31 @@
             "eccentricity": 0.09341233,
             "semimajoraxis": 1.52366231,
             "color": [255, 0, 0]
+        },{
+            "name": "jupiter",
+            "mass": 1.8986e27,
+            "eccentricity": 0.048775,
+            "semimajoraxis": 5.20336301,
+            "color": [100, 100, 100]
+        },{
+            "name": "saturn",
+            "mass": 5.6846e26,
+            "eccentricity": 0.05415060,
+            "semimajoraxis": 9.554909,
+            "color": [100, 100, 100]
+        },{
+            "name": "hale–bopp",
+            "mass": 1,
+            "eccentricity": 0.995086,
+            "semimajoraxis": 186,
+            "color": [100, 100, 100]
+        },{
+            "name": "67P/churyumov–gerasimenko",
+            "mass": 1e13,
+            "eccentricity": 0.64102,
+            "semimajoraxis": 3.4630,
+            "color": [100, 100, 100]
         }
+
     ]
 }]
