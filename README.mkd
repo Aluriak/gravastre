@@ -49,17 +49,17 @@ See [`data/`](https://github.com/Aluriak/gravastre/tree/master/data) and [usage]
 ## Features
 - [X] complete and personalisable simulation
 - [X] JSON configuration of systems
-- [ ] System: specify speed as double, not pair of double, and randomly place in orbit the subsystems
-- [ ] System,JSON: allow specifying an excentricity for the orbit, or any combination of valid parameters
-- [ ] zoom and translation in the world
-- [ ] astre selection
+- [X] System: specify speed as double, not pair of double, and randomly place in orbit the subsystems
+- [X] System,JSON: allow specifying an excentricity for the orbit, or any combination of valid parameters
+- [X] zoom and translation in the world
+- [X] astre selection
+- [X] config file for systems
 - [ ] astre realistic radius + token for replace astre when too far
 - [ ] print astre name when mouse over it (or its token)
 - [ ] config file for constants
-- [ ] config file for systems
 - [ ] save systems
-- [ ] provides GUI for generation of stable systems
-- [ ] improve existing GUI with informations about selected astre
+- [ ] provides GUI for generation of systems
+- [ ] informations about selected astre in a dedicated widget: name, mass, orbit trajectory
 
 
 ## Units
