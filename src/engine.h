@@ -1,12 +1,14 @@
 #pragma once
 
-#include <iostream>
-#include <list>
 #include <assert.h>
 #include <cmath>
+#include <iostream>
+#include <list>
+#include <tuple>
+
 #include "converters.h"
-#include "astre.h"
 #include "system.h"
+#include "astre.h"
 
 
 
@@ -17,15 +19,20 @@ namespace eng {
 
     public:
         //Engine();
-        void add_astre(double, double, double, double, double,
-                       std::string="unamed", QColor=Qt::white);
-        void spawn(System&, double=1., double=1.);
+        Astre* add_astre(Astre* astre, System=System());
+        Astre* add_astre(AstreData, PositionAndSpeed, System=System());
+        Astre* add_astre(double, double, double, double, double,
+                         std::string="unamed", QColor=Qt::white, System=System());
+        Astre* add_astre(double, double, double, double, double, double,
+                         std::string="unamed", QColor=Qt::white, System=System());
+        void spawn(System&, std::tuple<double, double> =std::make_tuple(0, 0));
+        void spawn(System&, PositionAndSpeed);
         void update();
         void clear_all();
 
-        typedef std::list<Astre*>::iterator AstreIterator;
-        AstreIterator begin() { return astres.begin(); };
-        AstreIterator end() { return astres.end(); };
+        std::list<Astre*>::iterator begin() { return astres.begin(); };
+        std::list<Astre*>::iterator end() { return astres.end(); };
+        std::list<Astre*> getAstres() const { return this->astres; }
 
     private:
         std::list<Astre*> astres;
