@@ -7,8 +7,8 @@
 
 #include <QJsonArray>
 
+#include "converters.h"
 #include "utils.h"
-#include "astre.h"
 
 
 namespace orbit {
@@ -102,8 +102,8 @@ inline double semiminoraxis_from_eccentricity_semimajoraxis(double eccentricity,
 inline bool predictible(bool distance, bool periapsis, bool apoapsis, bool eccentricity,
                         bool speed, bool semimajoraxis, bool semiminoraxis,
                         bool mass_orbiter, bool mass_orbited) {
-    return mass_orbited
-        &&((distance && mass_orbited)
+    return mass_orbited && mass_orbiter
+        &&((distance)
         || (distance && speed)
         || (distance && periapsis)
         || (distance && periapsis && eccentricity)
