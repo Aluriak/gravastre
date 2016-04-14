@@ -51,8 +51,7 @@ view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
 
     // Configure the timer
     connect(&this->update_call, SIGNAL(timeout()), this, SLOT(update_engine()));
-    update_call.start(1);
-    update_engine();
+    update_call.start(VIEW_ENGINE_TIME_UPDATE);
 }
 
 
