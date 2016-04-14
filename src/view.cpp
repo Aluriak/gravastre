@@ -142,42 +142,28 @@ void view::Universe::translate(double x, double y) {
 
 
 void view::Universe::mousePressEvent(QMouseEvent* event) {
-    //std::cout << "Clic detected at:" << std::endl
-              //<< "\tevent->pos():" << event->pos().x() << ";" << event->pos().y() << std::endl
-              //<< "\tevent->localPos():" << event->localPos().x() << ";" << event->localPos().y() << std::endl
-              //<< "\tevent->globalPos():" << event->globalPos().x() << ";" << event->globalPos().y() << std::endl
-              //<< "\tevent->screenPos():" << event->screenPos().x() << ";" << event->screenPos().y() << std::endl
-              //<< "\tevent->windowPos():" << event->windowPos().x() << ";" << event->windowPos().y() << std::endl
-              //<< "\tScreen:" << event->screenPos().x() << ";" << event->screenPos().y() << std::endl
-              //<< "\tScene:" << scene_coords.x() << ";" << scene_coords.y() << std::endl
-              //<< "\tEND"  << std::endl;
+    QPointF scene_coords = this->mapToScene(QPoint(event->x(), event->y()));
+    if(event->button() == Qt::LeftButton) {
+        QGraphicsItem* clicked = this->scene->itemAt(scene_coords, QTransform());
+        if(clicked == NULL) {
+            this->placement_line.setVisible(true);
+            this->placement_line.setLine(
+                scene_coords.x() - this->reference.pos().x(),
+                scene_coords.y() - this->reference.pos().y(),
+                scene_coords.x() - this->reference.pos().x(),
+                scene_coords.y() - this->reference.pos().y()
+            );
+        } else { // an item was clicked
+            this->selected_object = clicked;
 #if VIEW_DETAILS_ON_MOUSE_CLIC
-    bool astre_found = false;
-    //for(auto it : this->engine.getAstres()) {
-    //}  // TODO
-    if(not astre_found) {
-#else
-    if(true) {
+            // TODO: print informations on astre and its trajectory
 #endif
-        QPointF scene_coords = this->mapToScene(QPoint(event->x(), event->y()));
-        if(event->button() == Qt::LeftButton) {
-            QGraphicsItem* clicked = this->scene->itemAt(scene_coords, QTransform());
-            if(clicked == NULL) {
-                this->placement_line.setVisible(true);
-                this->placement_line.setLine(
-                    scene_coords.x() - this->reference.pos().x(),
-                    scene_coords.y() - this->reference.pos().y(),
-                    scene_coords.x() - this->reference.pos().x(),
-                    scene_coords.y() - this->reference.pos().y()
-                );
-            } else { // an item was clicked
-                this->selected_object = clicked;
-            }
-        } else if(event->button() == Qt::RightButton) {
-            this->drag_translation_x = scene_coords.x();
-            this->drag_translation_y = scene_coords.y();
         }
+    } else if(event->button() == Qt::RightButton) {
+        this->drag_translation_x = scene_coords.x();
+        this->drag_translation_y = scene_coords.y();
     }
+
     // Call default implementation, to propagate to the graphicsitems.
     QGraphicsView::mousePressEvent(event);
 }
