@@ -9,6 +9,7 @@
 #include <QVariant>
 #include <QDebug>
 
+#include "options.h"
 
 
 /**
