@@ -136,9 +136,6 @@ std::tuple<double, double, double, double> orbit::OrbitalTrajectory::position() 
         pos_x = std::uniform_real_distribution<double>(-semimajoraxis, semimajoraxis)(random_gen);
         // equation of an ellipse: y = sqrt(b*b - b*b * x*x / (a*a))
         pos_y = sqrt(semiminoraxis*semiminoraxis - semiminoraxis*semiminoraxis * pos_x*pos_x / (semimajoraxis * semimajoraxis));
-        if(std::bernoulli_distribution()(random_gen)) {
-            pos_y *= -1; // change sign in 50% of cases
-        }
         // Compute the speed associated with position, in this particular case
         double real_distance = sqrt(pos_x*pos_x + pos_y*pos_y);
         double real_speed = orbit::orbital_speed(mass, parent_mass,
@@ -168,6 +165,14 @@ std::tuple<double, double, double, double> orbit::OrbitalTrajectory::position() 
         double slope(tangent_slope(semiminoraxis, semimajoraxis, pos_x, pos_y));
         speed_x =     1 * real_speed / sqrt(slope * slope + 1);
         speed_y = slope * real_speed / sqrt(slope * slope + 1);
+
+        // Above or below the parent ?  (considering y axis)
+        if(std::bernoulli_distribution()(random_gen)) {
+            // without position swap, astre could'nt be placed above the parent
+            pos_y *= -1;
+            // without speed swap, astre will orbit clockwise if spawned below the parent
+            speed_x *= -1;
+        }
     }
     return std::make_tuple(pos_x, pos_y, speed_x, speed_y);
 }
