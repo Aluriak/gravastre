@@ -33,6 +33,7 @@ Currently, some interactions are implemented:
 - Mouse:
     - left click: create a new unamed astre (hold to define an initial speed)
     - right click: translation of the view (not properly working)
+    - mouse wheel: zoom
 - Keyboard:
     - i/e: decrease or increase mass of next created astres
     - d: clear all universe
@@ -54,15 +55,18 @@ See [`data/`](https://github.com/Aluriak/gravastre/tree/master/data) and [usage]
 - [X] JSON configuration of systems
 - [X] System: specify speed as double, not pair of double, and randomly place in orbit the subsystems
 - [X] System,JSON: allow specifying an excentricity for the orbit, or any combination of valid parameters
-- [X] zoom and translation in the world
+- [X] zoom and translation in the world using the mouse
 - [X] astre selection
 - [X] config file for systems
+- [ ] options: show trajectory of selected Astre as an ellipse
 - [ ] astre realistic radius + token for replace astre when too far
+- [ ] creation of an Astre trajectory knowing (all?) Astres
 - [ ] print astre name when mouse over it (or its token)
-- [ ] config file for constants
+- [ ] config file for constants (+option for using hard-coded ones)
 - [ ] save systems
 - [ ] provides GUI for generation of systems
-- [ ] informations about selected astre in a dedicated widget: name, mass, orbit trajectory
+- [ ] provides GUI for generating SPARQL queries and produce resulting systems
+- [ ] informations about selected astre in a dedicated widget: name, mass, orbit trajectory, link to wikipedia
 
 
 ## Units
@@ -70,10 +74,9 @@ See the _converters.h_ header for units definitions and constants.
 Units used by the Astre class are real units ; conversions to non real units is done dynamically,
 when needed by the computations.
 
-All position of Astres are given in [Astronomical Unit](https://en.wikipedia.org/wiki/Astronomical_unit).
-The high-left border of the screen is the position reference, at (0;0).
+All positions and distances are given in [Astronomical Unit](https://en.wikipedia.org/wiki/Astronomical_unit).
+The *reference*, shown as a white rectangle, is placed at (0;0).
 
-Speeds are given to the engine in kilometer per seconds (for user convenience),
-although the speed is internally in [meter per second](https://en.wikipedia.org/wiki/SI_base_unit).
+Speeds are in [meter per second](https://en.wikipedia.org/wiki/SI_base_unit).
 
 
