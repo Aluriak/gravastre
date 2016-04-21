@@ -12,11 +12,17 @@ view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
     this->setTransformationAnchor(QGraphicsView::NoAnchor);
     this->scene->setBackgroundBrush(QBrush(Qt::black));
     // Items config
+#if VIEW_VISIBLE_REFERENCE
     this->reference.setRect(-2, -2, 4, 4);
     this->reference.setPos(0, 0);
     this->reference.setBrush(QBrush(Qt::white));
     this->reference.setPen(QPen(Qt::white));
-    this->reference.setVisible(VIEW_VISIBLE_REFERENCE);
+#else
+    this->reference.setRect(0, 0, 0, 0);
+    this->reference.setPos(0, 0);
+    this->reference.setBrush(QBrush(Qt::transparent));
+    this->reference.setPen(QPen(Qt::transparent));
+#endif
     this->placement_line.setPen(QPen(Qt::blue));
     this->placement_line.setVisible(false);
     this->placement_line.setParentItem(&this->reference);
@@ -67,8 +73,8 @@ void view::Universe::update_engine() {
         this->engine.update();
         // View is centered on selected object
         if(this->follow_selection) {
-            double x = this->selected_object->pos().x(),
-                   y = this->selected_object->pos().y();
+            double x = this->selected_object->pos().x();
+            double y = this->selected_object->pos().y();
             this->setSceneRect(
                 x - (double)this->width()  / 2.,
                 y - (double)this->height() / 2.,
@@ -156,7 +162,14 @@ void view::Universe::mousePressEvent(QMouseEvent* event) {
                 scene_coords.y() - this->reference.pos().y()
             );
         } else { // an item was clicked
+#if VIEW_SELECTABLE_REFERENCE
             this->selected_object = clicked;
+#else
+            if(clicked != &this->reference) {
+                this->selected_object = clicked;
+            }
+#endif
+            std::cerr << "Item selected has changed to " << clicked << "\n";
 #if VIEW_DETAILS_ON_MOUSE_CLIC
             // TODO: print informations on astre and its trajectory
 #endif
@@ -243,6 +256,6 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
         std::cout << (this->pause?"Paused":"Running") << std::endl;
     } else if(event->key() == Qt::Key_Space) {
         this->reference.setPos(0, 0);
-        this->follow_selection = true;
+        this->follow_selection = not this->follow_selection;
     }
 }
