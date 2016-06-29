@@ -38,10 +38,10 @@ int main(int argc, char *argv[]) {
     } else {
         std::random_device random_rd;     // only used once to initialise (seed) engine
         std::mt19937 random_gen(random_rd());    // random-number engine used (Mersenne-Twister in this case)
-        std::uniform_int_distribution<int> distribution_pos(0,200);
-        std::uniform_int_distribution<int> distribution_spd(-3,3);
-        std::uniform_int_distribution<int> distribution_mass(10,18);
-        for(int i = 0; i < 1500; i++) {
+        std::uniform_int_distribution<int> distribution_pos(0,1000);
+        std::uniform_int_distribution<int> distribution_spd(-100,100);
+        std::uniform_int_distribution<int> distribution_mass(10,20);
+        for(int i = 0; i < 4000; i++) {
             double pos_x = distribution_pos(random_gen) / 100.;
             double pos_y = distribution_pos(random_gen) / 100.;
             int spd_x = distribution_spd(random_gen);
