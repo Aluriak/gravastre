@@ -4,6 +4,10 @@
 #include "options.h"
 
 
+// Debug flag
+#define LOGOK std::cerr << __FILE__ << ':' << __LINE__ << '\n';
+
+
 /**
  * Next are defined constants that are immutable, relative to
  * physical definitions, or deduced from previously defined constants.
