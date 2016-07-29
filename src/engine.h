@@ -19,12 +19,12 @@ namespace eng {
 
     public:
         //Engine();
-        Astre* add_astre(Astre* astre, System=System());
-        Astre* add_astre(AstreData, PositionAndSpeed, System=System());
+        Astre* add_astre(Astre* astre);
+        Astre* add_astre(AstreData, PositionAndSpeed);
         Astre* add_astre(double, double, double, double, double,
-                         std::string="unamed", QColor=Qt::white, System=System());
+                         std::string="unamed", QColor=Qt::white);
         Astre* add_astre(double, double, double, double, double, double,
-                         std::string="unamed", QColor=Qt::white, System=System());
+                         std::string="unamed", QColor=Qt::white);
         void spawn(System&, std::tuple<double, double> =std::make_tuple(0, 0));
         void spawn(System&, PositionAndSpeed);
         void update();
