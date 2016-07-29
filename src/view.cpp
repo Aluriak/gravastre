@@ -58,7 +58,10 @@ view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
  * Add a new Astre with given data in engine, and give it a view.
  */
 void view::Universe::add_astre(double mass, double x, double y, double vx, double vy) {
-    this->add_astre(this->engine.add_astre(mass, x, y, vx, vy));
+    // Random color
+    QColor random_color(utils::randnum(0, 255), utils::randnum(0, 255), utils::randnum(0, 255));
+    // Create the astre
+    this->add_astre(this->engine.add_astre(mass, x, y, vx, vy, "unamed", random_color));
 }
 void view::Universe::add_astre(eng::Astre* astre) {
     astre->setParentItem(&this->reference);
