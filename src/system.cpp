@@ -29,7 +29,7 @@ std::vector<eng::System*> eng::System::from_json(QJsonArray json, double* parent
 #if DEBUG_ORBITAL_TRAJECTORY_LOGS
         trajectory.debug();
 #endif
-        if(parent_mass != NULL and not trajectory.is_orbit()) {
+        if(parent_mass != NULL and not trajectory.is_valid()) {
             // Logs the problem if should be orbiting something
             std::cerr << "The System of name " << object[SYSTEM_JSON_KEY_NAME].toString().toStdString() << " doesn't have enough data to be placed in orbit. It will not be created." << std::endl;
         } else { // no parent OR orbit found

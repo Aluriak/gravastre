@@ -186,6 +186,14 @@ std::tuple<double, double, double, double> orbit::OrbitalTrajectory::position() 
             // without speed swap, astre will orbit clockwise if spawned below the parent
             speed_x *= -1;
         }
+    } else if(this->is_precise_placement()) {
+        pos_x = this->positionX;
+        pos_y = this->positionY;
+        speed_x = this->speedX;
+        speed_y = this->speedY;
     }
     return std::make_tuple(pos_x, pos_y, speed_x, speed_y);
 }
+
+
+
