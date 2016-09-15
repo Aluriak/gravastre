@@ -1,0 +1,24 @@
+[{
+    "name": "central mass",
+    "mass": 2e30,
+    "color": [255, 255, 0],
+    "satellites": [{
+            "name": "hammer",
+            "mass": 1e10,
+            "positionX": 0,
+            "positionY": 2,
+            "speedX": 0,
+            "speedY": 0,
+            "color": [255, 255, 255]
+        },{
+            "name": "plume",
+            "mass": 1,
+            "positionX": 0,
+            "positionY": -2,
+            "speedX": 0,
+            "speedY": 0,
+            "color": [255, 255, 255]
+        }
+
+    ]
+}]
