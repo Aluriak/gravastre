@@ -126,9 +126,12 @@ inline double tangent_slope(double semiminoraxis, double semimajoraxis,
  * Value holder of orbital trajectory
  */
 struct OrbitalTrajectory {
-    double mass, parent_mass, speed, distance, apoapsis,
-           periapsis, eccentricity, semimajoraxis, semiminoraxis;
+    double mass, parent_mass, speed, distance,
+           speedX, speedY, positionX, positionY,
+           apoapsis, periapsis, eccentricity,
+           semimajoraxis, semiminoraxis;
     bool have_mass, have_parent_mass, have_speed, have_distance,
+         have_speedX, have_speedY, have_positionX, have_positionY,
          have_apoapsis, have_periapsis, have_eccentricity,
          have_semimajoraxis, have_semiminoraxis;
 

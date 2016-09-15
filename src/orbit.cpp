@@ -11,6 +11,10 @@ orbit::OrbitalTrajectory::OrbitalTrajectory() {
     have_eccentricity = false;
     have_semimajoraxis = false;
     have_semiminoraxis = false;
+    have_speedX = false;
+    have_speedY = false;
+    have_positionX = false;
+    have_positionY = false;
 }
 
 
@@ -24,6 +28,11 @@ orbit::OrbitalTrajectory::OrbitalTrajectory(QJsonObject data, double* parent_mas
     have_eccentricity = data[SYSTEM_JSON_KEY_ECCENTRICITY].isDouble();
     have_semimajoraxis = data[SYSTEM_JSON_KEY_SEMIMAJORAXIS].isDouble();
     have_semiminoraxis = data[SYSTEM_JSON_KEY_SEMIMINORAXIS].isDouble();
+    have_speedX = data[SYSTEM_JSON_KEY_SPEEDX].isDouble();
+    have_speedY = data[SYSTEM_JSON_KEY_SPEEDY].isDouble();
+    have_positionX = data[SYSTEM_JSON_KEY_POSITIONX].isDouble();
+    have_positionY = data[SYSTEM_JSON_KEY_POSITIONY].isDouble();
+
     mass = data[SYSTEM_JSON_KEY_MASS].toDouble();
     parent_mass = parent_mass_ != NULL? *parent_mass_ : 0.;
     distance = unit::au_to_meter(data[SYSTEM_JSON_KEY_DISTANCE].toDouble());
@@ -33,6 +42,10 @@ orbit::OrbitalTrajectory::OrbitalTrajectory(QJsonObject data, double* parent_mas
     eccentricity = data[SYSTEM_JSON_KEY_ECCENTRICITY].toDouble();
     semimajoraxis = unit::au_to_meter(data[SYSTEM_JSON_KEY_SEMIMAJORAXIS].toDouble());
     semiminoraxis = unit::au_to_meter(data[SYSTEM_JSON_KEY_SEMIMINORAXIS].toDouble());
+    speedX = unit::au_to_meter(data[SYSTEM_JSON_KEY_SPEEDX].toDouble());
+    speedY = unit::au_to_meter(data[SYSTEM_JSON_KEY_SPEEDY].toDouble());
+    positionX = unit::au_to_meter(data[SYSTEM_JSON_KEY_POSITIONX].toDouble());
+    positionY = unit::au_to_meter(data[SYSTEM_JSON_KEY_POSITIONY].toDouble());
     this->compute(); // find values that can be
 }
 
