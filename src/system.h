@@ -29,7 +29,7 @@ namespace eng {
         static void validate(QJsonObject system);
 
         AstreData getAstre() const { return this->astre; }
-        orbit::OrbitalTrajectory getTrajectory() { return this->trajectory; }
+        orbit::OrbitalTrajectory getTrajectory() const { return this->trajectory; }
         //double getMass()      const { return std::get<0>(this->astre); }
         //double getRadius()    const { return std::get<1>(this->astre); }
         //std::string getName() const { return std::get<2>(this->astre); }
@@ -38,7 +38,7 @@ namespace eng {
         // Accessors
         std::vector<System*> getSubsystems() const { return this->subsystems; }
         std::tuple<double, double, double, double> position() const
-                        { return this->trajectory.position(); }
+                        { return this->getTrajectory().position(); }
 
 
     private:
