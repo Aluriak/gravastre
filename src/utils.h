@@ -28,6 +28,10 @@
 #define SYSTEM_JSON_KEY_ECCENTRICITY "eccentricity"  // no unit, 0 < e <= 1
 #define SYSTEM_JSON_KEY_SEMIMAJORAXIS "semimajoraxis"  // AU
 #define SYSTEM_JSON_KEY_SEMIMINORAXIS "semiminoraxis"  // AU
+#define SYSTEM_JSON_KEY_SPEEDX "speedX"  // m.s-1
+#define SYSTEM_JSON_KEY_SPEEDY "speedY"  // m.s-1
+#define SYSTEM_JSON_KEY_POSITIONX "positionX"  // AU
+#define SYSTEM_JSON_KEY_POSITIONY "positionY"  // AU
 
 
 /**
