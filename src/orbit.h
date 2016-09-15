@@ -152,9 +152,17 @@ struct OrbitalTrajectory {
 
 
     bool is_orbit() const {
+        // True if: all circular orbit data
         return (have_distance && have_speed && have_mass && have_parent_mass)
+            // all non-circular orbit data
             || (have_eccentricity && have_semimajoraxis && have_semiminoraxis
                 && have_mass && have_parent_mass);
+    }
+    bool is_precise_placement() const {
+            return have_speedX && have_speedY && have_positionX && have_positionY;
+    }
+    bool is_valid() const {
+        return is_orbit() or is_precise_placement();
     }
     bool is_circular_orbit() const {
         return (have_eccentricity and eccentricity == 0.) or (not have_eccentricity);
