@@ -1,7 +1,7 @@
 #include "engine.h"
 
 
-eng::Astre* eng::Engine::add_astre(eng::Astre* astre, System system) {
+eng::Astre* eng::Engine::add_astre(eng::Astre* astre) {
     assert(astre != NULL);
     this->astres.push_back(astre);
 #if DATA_ASTRE_HOLDS_SYSTEM
@@ -21,7 +21,7 @@ eng::Astre* eng::Engine::add_astre(eng::Astre* astre, System system) {
 
 
 eng::Astre* eng::Engine::add_astre(eng::AstreData astre,
-                                   eng::PositionAndSpeed pos_speed, System system) {
+                                   eng::PositionAndSpeed pos_speed) {
     double radius = std::get<1>(astre) > 0. ?
             std::get<1>(astre) : Astre::mass_to_radius(std::get<0>(astre));
     return this->add_astre(
@@ -30,8 +30,7 @@ eng::Astre* eng::Engine::add_astre(eng::AstreData astre,
         std::get<0>(pos_speed), std::get<1>(pos_speed),
         std::get<2>(pos_speed), std::get<3>(pos_speed),
         std::get<2>(astre),  // name
-        std::get<3>(astre),  // color
-        system
+        std::get<3>(astre)  // color
     );
 }
 
@@ -39,21 +38,20 @@ eng::Astre* eng::Engine::add_astre(eng::AstreData astre,
 // no radius in this one
 eng::Astre* eng::Engine::add_astre(double mass, double pos_x, double pos_y,
                                    double speed_x, double speed_y,
-                                   std::string name, QColor color, System system) {
+                                   std::string name, QColor color) {
     assert(mass > 0.);
     return this->add_astre(
         mass, Astre::mass_to_radius(mass),
         pos_x, pos_y,
         speed_x, speed_y,
-        name, color,
-        system
+        name, color
     );
 }
 
 
 eng::Astre* eng::Engine::add_astre(double mass, double radius, double pos_x,
                                    double pos_y, double speed_x, double speed_y,
-                                   std::string name, QColor color, System system) {
+                                   std::string name, QColor color) {
     assert(mass > 0.);
     return this->add_astre(
         new Astre(
@@ -61,8 +59,7 @@ eng::Astre* eng::Engine::add_astre(double mass, double radius, double pos_x,
             pos_x, pos_y,
             speed_x, speed_y,
             name, color
-        ),
-        system
+        )
     );
 }
 
@@ -82,7 +79,7 @@ void eng::Engine::spawn(System& system, PositionAndSpeed offset) {
     double spd_x = std::get<2>(offset) + std::get<2>(astre_pos);
     double spd_y = std::get<3>(offset) + std::get<3>(astre_pos);
     PositionAndSpeed astre_absolute_pos(std::make_tuple(pos_x, pos_y, spd_x, spd_y));
-    this->add_astre(system.getAstre(), astre_absolute_pos, system);
+    this->add_astre(system.getAstre(), astre_absolute_pos);
     for(auto subsystem : system.getSubsystems()) {
         this->spawn(*subsystem, astre_absolute_pos);
     }
