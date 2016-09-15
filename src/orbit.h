@@ -151,6 +151,16 @@ struct OrbitalTrajectory {
     double getHeight() const { return this->semiminoraxis * 1.; }
 
 
+    /**
+     * Predicats is_orbit, is_precise_placement and is_valid
+     * The two first are used internally to determined which method should be used
+     *  to place the astre at their right place.
+     *      orbit: randomly place astre at a valid point in space
+     *      precise placement: place astre where user want it to be
+     * is_valid() is the disjunction is_orbit() and is_precise_placement().
+     * is_valid() will be used by client code to determine if the trajectory is able
+     *  to spawn something.
+     */
     bool is_orbit() const {
         // True if: all circular orbit data
         return (have_distance && have_speed && have_mass && have_parent_mass)
@@ -164,6 +174,7 @@ struct OrbitalTrajectory {
     bool is_valid() const {
         return is_orbit() or is_precise_placement();
     }
+
     bool is_circular_orbit() const {
         return (have_eccentricity and eccentricity == 0.) or (not have_eccentricity);
     }
