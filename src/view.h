@@ -31,7 +31,7 @@ namespace view {
         void translate(double x, double y);
 
     public:
-        Universe(eng::Engine&, QWidget* parent=NULL);
+        Universe(eng::Engine&, bool start_paused=false, QWidget* parent=NULL);
         void add_astre(eng::Astre*);
         void add_astre(double, double, double, double, double);
         void togglePause() { this->pause = not this->pause; }
@@ -54,7 +54,7 @@ namespace view {
         double selected_mass;
         double selected_speed;  // the bigger is, the speedy will be the new astre
         eng::Engine& engine;
-        bool pause = false;  // true: no engine update
+        bool pause;  // true: no engine update
         bool follow_selection = false;  // true: keep selected object in view center
 
     };

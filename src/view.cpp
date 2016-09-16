@@ -2,8 +2,8 @@
 #include "view.h"
 
 
-view::Universe::Universe(eng::Engine& engine, QWidget* parent) :
-                         QGraphicsView(parent), engine(engine) {
+view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent) :
+                         QGraphicsView(parent), engine(engine), pause(start_paused) {
     // Scene config
     this->scene = new QGraphicsScene;
     this->setScene(this->scene);
