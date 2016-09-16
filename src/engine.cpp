@@ -101,7 +101,7 @@ void eng::Engine::update() {
             assert(astre != other);
             if(astre->updatable() and other->updatable()) {
 #if COLLISION
-                if(astre->collide(other, dist)) {
+                if(astre->collide(other)) {
                     //std::cout << "Collision detected !" << std::endl;
                     // the bigger absorbs the ligher
                     if(astre->bigger(other)) {
