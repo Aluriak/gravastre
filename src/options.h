@@ -45,4 +45,4 @@
 #define VIEW_TRANSLATION_RATIO 1.0
 #define VIEW_VISIBLE_REFERENCE false
 #define VIEW_SELECTABLE_REFERENCE false  // true: some bugs can appear
-#define VIEW_ENGINE_TIME_UPDATE 5
+#define VIEW_ENGINE_TIME_UPDATE 5  // milliseconds
