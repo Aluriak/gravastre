@@ -4,6 +4,7 @@
 #include <iostream>
 #include <tuple>
 
+#include <QCoreApplication>
 #include <QWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>

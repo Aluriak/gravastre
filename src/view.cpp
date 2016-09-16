@@ -260,5 +260,7 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
     } else if(event->key() == Qt::Key_Space) {
         this->reference.setPos(0, 0);
         this->follow_selection = not this->follow_selection;
+    } else if(event->key() == Qt::Key_Escape) {
+        QCoreApplication::quit();
     }
 }
