@@ -124,7 +124,7 @@ void eng::Engine::update() {
     for(; it_astres != this->astres.end(); it_astres++) {
         Astre* astre = *it_astres;
         if(astre->updatable()) {
-            astre->update();
+            astre->physic_update();
         } else {  // astre was destroyed, removed,…
             delete astre;
             it_astres = this->astres.erase(it_astres);
