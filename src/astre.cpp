@@ -1,154 +1,50 @@
 #include "astre.h"
 
 
+/**
+ * Object lifetime
+ */
 eng::Astre::Astre(double mass, double radius, double pos_x, double pos_y,
                   double speed_x, double speed_y, std::string name, QColor color) :
-    QGraphicsEllipseItem(-radius, -radius, radius, radius)
+    Interactant(mass, pos_x, pos_y, speed_x, speed_y, name)
 {
-    this->init_attributes(mass, radius, pos_x, pos_y, speed_x, speed_y, name, color);
+    this->init_attributes(color, radius);
 }
 
 // Version without radius: deduce radius from mass
 eng::Astre::Astre(double mass, double pos_x, double pos_y,
                   double speed_x, double speed_y, std::string name, QColor color) :
-
-    QGraphicsEllipseItem(-radius, -radius, radius, radius)
+    Interactant(mass, pos_x, pos_y, speed_x, speed_y, name)
 {
-    this->init_attributes(mass, Astre::mass_to_radius(mass),
-                          pos_x, pos_y, speed_x, speed_y, name, color);
+    this->init_attributes(color);
 }
 
+eng::Astre::~Astre() {}
 
-eng::Astre::~Astre() {
-#if DATA_ASTRE_HOLDS_TRAJECTORY
-    if(this->trajectory != NULL) { delete this->trajectory; }
-#endif
-}
+
 
 
 /**
- * PRIVATE: Initialize fields. Called by constructors.
+ * Draw an Astre
  */
-void eng::Astre::init_attributes(double mass, double radius, double pos_x,
-                                 double pos_y, double speed_x, double speed_y,
-                                 std::string name, QColor color) {
-    this->mass = mass;
-    this->radius = radius;
-    this->position_x = pos_x;
-    this->position_y = pos_y;
-#if VIEW_INITIAL_POSITION
-    this->init_position_x = pos_x;
-    this->init_position_y = pos_y;
-#endif
-    this->speed_x = speed_x;
-    this->speed_y = speed_y;
-    this->accel_x = 0.;
-    this->accel_y = 0.;
-    this->name = name;
-    this->color = color;
-    this->visible = true;
-    this->nullified = false;
-    assert(mass != 0.);
-#if DEBUG_SUN_DIST
-    // debug
-    dist_to_sun_min = -1;
-    dist_to_sun_max = -1;
-#endif
-    // Graphics
-    this->setBrush(QBrush(color));  // fill color
-    this->setPen(QPen(color));  // outline color
-    //this->setFlag(QGraphicsItem::ItemIsSelectable, true);
+void eng::Astre::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                       QWidget *widget) {
+    painter->setBrush(QBrush(this->color));
+    painter->setPen(QPen(color));  // outline color
+    painter->drawEllipse(-radius, -radius, radius, radius);
 }
 
-
-void eng::Astre::update() {
-    // add acceleration to speed and speed to position
-    // F=ma <=> acceleration = F/mass
-    this->speed_x += this->accel_x / this->mass;
-    this->speed_y += this->accel_y / this->mass;
-    this->position_x += unit::real_speed_to_simulation_speed(unit::meter_to_au(speed_x));
-    this->position_y += unit::real_speed_to_simulation_speed(unit::meter_to_au(speed_y));
-    // prepare the next step
-    this->accel_x = 0;
-    this->accel_y = 0;
-    // Graphic
-    this->setPos(
-        unit::au_to_pixel(this->position_x),
-        unit::au_to_pixel(this->position_y)
-    );
-}
-
-
-void eng::Astre::accelerateTo(eng::Astre* const othr, const double dist) {
-    assert(othr != NULL);
-    //double attraction = - GRAVITATIONNAL_CONSTANT * othr->mass * this->mass / squared_dist;
-    // get graviationnal force F (in newton)
-    double attraction = unit::attraction_force_meter(
-            this->mass, othr->mass, unit::au_to_meter(dist));
-    // add it to acceleration counters
-    this->accel_x += attraction * ((this->position_x - othr->position_x) / dist);
-    this->accel_y += attraction * ((this->position_y - othr->position_y) / dist);
-
-#if DEBUG_SUN_DIST
-    if(othr->dist_to_sun_min < 0.) { // DEBUG
-        othr->dist_to_sun_min = dist;
-        othr->dist_to_sun_max = dist;
-    }
-
-    if(this->name == "sun") {
-        if(dist < othr->dist_to_sun_min) othr->dist_to_sun_min = dist;
-        if(dist > othr->dist_to_sun_max) othr->dist_to_sun_max = dist;
-        std::cout << "DIST " << othr->name
-            << "-sun: min=" << othr->dist_to_sun_min
-            << "; max=" << othr->dist_to_sun_max
-            << "; diff=" << othr->dist_to_sun_max - othr->dist_to_sun_min << std::endl;
-    }
-#endif
-}
-
-
-void eng::Astre::absorbs(eng::Astre* const othr) {
-    double mass_ratio = othr->mass / (othr->mass + this->mass);
-#if DEBUG_ABSORBED_LOGS
-    std::cout << this->name << " absorbs " << othr->name << std::endl;
-    std::cout << "\tmass ratio: " << mass_ratio << std::endl;
-#endif
-    this->mass += othr->mass;
-    this->radius = Astre::mass_to_radius(this->mass);
-    this->speed_x = (1.-mass_ratio) * this->speed_x + (mass_ratio * othr->speed_x);
-    this->speed_y = (1.-mass_ratio) * this->speed_y + (mass_ratio * othr->speed_y);
-    this->accel_x = this->accel_x + othr->accel_x;
-    this->accel_y = this->accel_y + othr->accel_y;
-    othr->nullify();  // othr is now unconsiderable by all astres
-}
-
-
-void eng::Astre::nullify() {
-#if DEBUG_NULLIFIED_LOGS
-    std::cout << this->name << " nullified !" << std::endl;
-#endif
-    this->nullified = true;
-    this->visible = false;
-}
 
 
 /**
- * Return a distance in AU
+ * Absorbtion needs to be reupdated
  */
-double eng::Astre::distTo(const Astre* const othr) const {
-    // while the position_x and position_y attributes are in AU,
-    //   no conversion is necessary.
-    double dist = sqrt(
-        (this->position_x - othr->position_x) * (this->position_x - othr->position_x)
-      + (this->position_y - othr->position_y) * (this->position_y - othr->position_y));
-#if DEBUG_DISTANCES_LOGS
-    std::cout << this->name << " (" << this->position_x << ";" << this->position_y
-              << ") is distant from "
-              << othr->name << " (" << othr->position_x << ";" << othr->position_y
-              << ") to " << dist << " au" << std::endl;
-#endif
-    return dist;
+void eng::Astre::absorbs(eng::Interactant* const othr) {
+    Interactant::absorbs(othr);
+    this->init_attributes();
 }
+
+
 
 
 /**
@@ -156,14 +52,19 @@ double eng::Astre::distTo(const Astre* const othr) const {
  */
 void eng::Astre::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     std::cerr << "Clic on " << this->getName() << std::endl;
-
 }
 
 
-bool eng::Astre::collide(const Astre* const othr, const double dist) const {
-    double min_separation = this->radius + othr->radius;
-#if DEBUG_COLLISION_LOGS
-    std::cout << "Collision: " << min_separation << "\tdist: " << dist <<  std::endl;
-#endif
-    return unit::au_to_pixel(dist) <= min_separation;
+/**
+ * PRIVATE: Initialize fields. Called by constructors.
+ * if radius is valid, it will override the radius.
+ */
+void eng::Astre::init_attributes(const QColor new_color, const double new_radius) {
+    this->radius = new_radius > 0 ? new_radius : Astre::mass_to_radius(this->getMass());
+    qreal penWidth = 1;
+    this->drawing_rect = QRectF(-radius - penWidth / 2., -radius - penWidth / 2.,
+                                radius + penWidth, radius + penWidth);
+    // graphics color
+    this->color = new_color != nullptr ? new_color : this->color;
+    //this->setFlag(QGraphicsItem::ItemIsSelectable, true);
 }

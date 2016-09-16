@@ -8,8 +8,8 @@
 
 #include <QColor>
 #include <QPainter>
-#include <QGraphicsEllipseItem>
 
+#include "interactant.h"
 #include "converters.h"
 #include "orbit.h"
 
@@ -35,76 +35,46 @@ namespace eng {
 
 
     /**
-     * Object evolving in 2D space, interacting gravitationnaly with the others.
+     * An Astre is the figuration of planets, stars, and anything that have a spherical form
      */
-    class Astre : public QGraphicsEllipseItem {
+    class Astre : public Interactant {
 
     public:
+        // Lifetime
         Astre(double, double, double, double, double, double, std::string, QColor);
         Astre(double, double, double, double, double, std::string, QColor);
-        ~Astre();
-        void update();
-        void accelerateTo(Astre* const, const double);
-        void absorbs(Astre* const);
-        void nullify();
-        double distTo(const Astre* const) const;
+        virtual ~Astre();
 
-        // Accessors
-        std::string getName() const { return this->name; }
-        double getX() const { return this->position_x; }
-        double getY() const { return this->position_y; }
-        double getSpeedX() const { return this->speed_x; }
-        double getSpeedY() const { return this->speed_y; }
-        double getMass() const { return this->mass; }
-        double getRadius() const { return this->radius; }
-        QColor getColor() const { return this->color; }
+        // Methods
+        void absorbs(eng::Interactant* const);
 
-        bool collide(const Astre* const, const double) const;
-        bool bigger(const Astre* const othr) const { return this->mass > othr->mass; }
-        bool updatable() const { return not this->nullified; }
-
+        // Class Methods
         static double mass_to_radius(double mass) {
             double log_mass = log10(mass/10e22);
             return (log_mass >=0 ? log_mass : 0) + 1;
         }
-#if DATA_ASTRE_HOLDS_TRAJECTORY
-        orbit::OrbitalTrajectory& getTrajectory() const { return *this->trajectory; }
-        void setTrajectory(orbit::OrbitalTrajectory t)
-                                    { this->trajectory = new orbit::OrbitalTrajectory(t); }
-        bool haveTrajectory() const { return this->trajectory != NULL; }
-#endif
-#if VIEW_INITIAL_POSITION
-        double getInitX() const { return this->init_position_x; }
-        double getInitY() const { return this->init_position_y; }
-#endif
+
+        // Accessors
+        double getRadius() const { return this->radius; }
+        QColor getColor() const { return this->color; }
+        QRectF boundingRect() const { return this->drawing_rect; };
 
 
     protected:
         // Graphic
         void mousePressEvent(QGraphicsSceneMouseEvent*);
+        void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 
 
     private:
-        void init_attributes(double, double, double, double, double, double, std::string, QColor);
+        // Methods
+        void init_attributes(const QColor=nullptr, const double=-1);
 
-        double mass, radius; // mass in kg, radius in pixel
-        double position_x, position_y; // position in astronomic unit (AU)
-        double speed_x, speed_y; // speed in meter per second (m.s-1)
-        double accel_x, accel_y;
-        bool visible;
-        bool nullified;
-        std::string name;
+        // Attributes
+        double radius; // radius in pixel
         QColor color;
-#if DEBUG_SUN_DIST
-        double dist_to_sun_min, dist_to_sun_max;
-#endif
-#if DATA_ASTRE_HOLDS_TRAJECTORY
-        orbit::OrbitalTrajectory* trajectory = NULL;
-#endif
-#if VIEW_INITIAL_POSITION
-        double init_position_x, init_position_y;
-#endif
+        QRectF drawing_rect;
 
     };
 
-} // namespace view
+} // namespace eng

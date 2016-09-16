@@ -22,15 +22,15 @@
 #define DEBUG_DISTANCES_LOGS false
 #define DEBUG_NULLIFIED_LOGS false
 #define DEBUG_ABSORBED_LOGS false
-#define DEBUG_ORBITAL_TRAJECTORY_LOGS true
+#define DEBUG_ORBITAL_TRAJECTORY_LOGS false
 
 
 /**
- * Next are defined some data flags, enabling some particular data manipulation,
+ * Next are defined some Interactant related flags, enabling some particular data manipulation,
  * useful for more features.
  * Note that some feature may need activation of previously defined options.
  */
-#define DATA_ASTRE_HOLDS_TRAJECTORY false
+#define DATA_INTERACTANTS_HOLDS_TRAJECTORY false
 
 
 /**

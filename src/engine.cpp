@@ -101,7 +101,7 @@ void eng::Engine::update() {
             assert(astre != other);
             if(astre->updatable() and other->updatable()) {
 #if COLLISION
-                if(astre->collide(other, dist)) {
+                if(astre->collide(other)) {
                     //std::cout << "Collision detected !" << std::endl;
                     // the bigger absorbs the ligher
                     if(astre->bigger(other)) {
@@ -124,7 +124,7 @@ void eng::Engine::update() {
     for(; it_astres != this->astres.end(); it_astres++) {
         Astre* astre = *it_astres;
         if(astre->updatable()) {
-            astre->update();
+            astre->physic_update();
         } else {  // astre was destroyed, removed,…
             delete astre;
             it_astres = this->astres.erase(it_astres);
