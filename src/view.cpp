@@ -27,18 +27,18 @@ view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent
     this->placement_line.setVisible(false);
     this->placement_line.setParentItem(&this->reference);
     this->scene->addItem(&reference);
-    this->selected_object = &this->reference;
+    this->selected_object = nullptr;
 
     // Register all Astre as graphic object, prepare the view.
-    eng::Astre* maximal_mass = NULL;  // will center the view on the heavier astre
-    for(auto astre : this->engine.getAstres()) {
-        this->add_astre(astre);
+    eng::Interactant* maximal_mass = NULL;  // will center the view on the heavier astre
+    for(auto astre : this->engine.getInteractants()) {
+        this->add_astre_to_graphic(astre);
         if(maximal_mass == NULL or astre->getMass() > maximal_mass->getMass()) {
             maximal_mass = astre;
         }
     }
     if(maximal_mass != NULL) {
-        //this->centerOn(maximal_mass->getX(), maximal_mass->getY());
+        //this->centerOn(maximal_mass->getX(), maximal_mass->getY());  // TODO
     }
     this->centerOn(0, 0);
 
@@ -61,10 +61,11 @@ void view::Universe::add_astre(double mass, double x, double y, double vx, doubl
     // Random color
     QColor random_color(utils::randnum(0, 255), utils::randnum(0, 255), utils::randnum(0, 255));
     // Create the astre
-    this->add_astre(this->engine.add_astre(mass, x, y, vx, vy, "unamed", random_color));
+    this->add_astre(new eng::Astre(mass, x, y, vx, vy, "unamed", random_color));
 }
-void view::Universe::add_astre(eng::Astre* astre) {
-    astre->setParentItem(&this->reference);
+void view::Universe::add_astre(eng::Interactant* interactant) {
+    this->engine.add(interactant);
+    this->add_astre_to_graphic(interactant);
 }
 
 
@@ -76,6 +77,7 @@ void view::Universe::update_engine() {
         this->engine.update();
         // View is centered on selected object
         if(this->follow_selection) {
+            assert(this->selected_object);
             double x = this->selected_object->pos().x();
             double y = this->selected_object->pos().y();
             this->setSceneRect(
@@ -152,6 +154,27 @@ void view::Universe::translate(double x, double y) {
 //}
 
 
+
+
+/**
+ * Set given interactant as the one to be followed
+ */
+void view::Universe::select(eng::Interactant* interactant) {
+#if VIEW_TRAJECTORY_DATA_ON_SELECTED
+    // change objects states
+    if(this->selected_object != nullptr)
+        this->selected_object->setDrawVelocity(false);
+    if(interactant != nullptr)
+        interactant->setDrawVelocity(true);
+#endif
+    // change this state
+    this->follow_selection = interactant != nullptr;
+    this->selected_object = interactant;
+    this->reference.setPos(0, 0);
+}
+
+
+
 void view::Universe::mousePressEvent(QMouseEvent* event) {
     QPointF scene_coords = this->mapToScene(QPoint(event->x(), event->y()));
     if(event->button() == Qt::LeftButton) {
@@ -165,13 +188,10 @@ void view::Universe::mousePressEvent(QMouseEvent* event) {
                 scene_coords.y() - this->reference.pos().y()
             );
         } else { // an item was clicked
-#if VIEW_SELECTABLE_REFERENCE
-            this->selected_object = clicked;
-#else
             if(clicked != &this->reference) {
-                this->selected_object = clicked;
+                // the item is necessarily an Interactant.
+                this->select((eng::Interactant*) clicked);
             }
-#endif
             std::cerr << "Item selected has changed to " << clicked << "\n";
 #if VIEW_DETAILS_ON_MOUSE_CLIC
             // TODO: print informations on astre and its trajectory

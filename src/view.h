@@ -17,6 +17,7 @@
 #include <QList>
 
 #include "engine.h"
+#include "interactant.h"
 #include "astre.h"
 #include "system.h"
 
@@ -32,10 +33,15 @@ namespace view {
         void translate(double x, double y);
 
     public:
+        // Lifetime
         Universe(eng::Engine&, bool start_paused=false, QWidget* parent=NULL);
-        void add_astre(eng::Astre*);
+
+        // Methods
+        void add_astre_to_graphic(eng::Interactant* inter) { inter->setParentItem(&this->reference); };
+        void add_astre(eng::Interactant*);
         void add_astre(double, double, double, double, double);
         void togglePause() { this->pause = not this->pause; }
+        void select(eng::Interactant*);
 
         virtual void mousePressEvent(QMouseEvent*);
         virtual void mouseMoveEvent(QMouseEvent*);
@@ -51,7 +57,7 @@ namespace view {
         QGraphicsLineItem placement_line;
         QTimer update_call;
         double drag_translation_x, drag_translation_y;
-        QGraphicsItem* selected_object;
+        eng::Interactant* selected_object;
         double selected_mass;
         double selected_speed;  // the bigger is, the speedy will be the new astre
         eng::Engine& engine;
