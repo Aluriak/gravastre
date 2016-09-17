@@ -11,10 +11,12 @@
 
 #include "converters.h"
 #include "orbit.h"
+#include "drawableVelocity.h"
 
 
 
 
+namespace view {class DrawableVelocity;}
 namespace eng {
 
 
@@ -46,6 +48,8 @@ namespace eng {
         double getAccelX() const { return this->last_accel_x; }
         double getAccelY() const { return this->last_accel_y; }
         double getMass() const { return this->mass; }
+        virtual double getSize() const = 0;
+        void setDrawVelocity(const bool draw);
         virtual double getBasicAccelX() const { return 0; }
         virtual double getBasicAccelY() const { return 0; }
 
@@ -53,6 +57,7 @@ namespace eng {
         bool collide(const Interactant* const) const;
         bool bigger(const Interactant* const othr) const { return this->mass > othr->mass; }
         bool updatable() const { return not this->nullified; }
+        bool isDrawVelocity() const { return this->drawer_velocity != nullptr; }
 
 
 #if VIEW_INITIAL_POSITION
@@ -87,6 +92,7 @@ namespace eng {
         double last_accel_x, last_accel_y;  // previous value of acceleration
         bool visible;  // false if should be hide
         bool nullified;  // true if should be free'd
+        view::DrawableVelocity* drawer_velocity = nullptr;
 
 #if DEBUG_SUN_DIST
         double dist_to_sun_min, dist_to_sun_max;

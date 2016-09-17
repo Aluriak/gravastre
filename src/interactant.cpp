@@ -129,6 +129,19 @@ bool eng::Interactant::collide(const Interactant* const othr) const {
 
 
 
+void eng::Interactant::setDrawVelocity(const bool draw) {
+    if(draw) {
+        if(not this->isDrawVelocity()) {
+            this->drawer_velocity = new view::DrawableVelocity(this);
+            this->drawer_velocity->setParentItem(this);
+        }
+    } else {
+        if(this->isDrawVelocity()) {
+            this->drawer_velocity->setParentItem(nullptr);
+            delete this->drawer_velocity;
+        }
+    }
+}
 
 
 void eng::Interactant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
