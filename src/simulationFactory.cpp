@@ -10,7 +10,10 @@ eng::SimulationFactory::SimulationFactory(std::string json_file, bool start_paus
 {
     if(this->mode == eng::SimulationFactory::InitMode::ReadJson) {
         this->config = new utils::JsonConfig(this->json_file);
-        std::cout << "found name: " << this->config->getPlayer(0)->name << std::endl;
+        std::cout << "found player: " << this->config->getPlayers().size() << std::endl;
+        std::cout << "found system: " << this->config->getSystems().size() << std::endl;
+    } else {
+        this->config = new utils::JsonConfig();
     }
 }
 
