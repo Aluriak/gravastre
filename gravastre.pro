@@ -6,6 +6,7 @@ QMAKE_CXXFLAGS += -std=c++11
 
 
 SOURCES += src/main.cpp \
+    src/jsonConfig.cpp \
     src/interactant.cpp \
     src/astre.cpp \
     src/engine.cpp \
@@ -21,5 +22,6 @@ HEADERS += \
     src/system.h \
     src/orbit.h \
     src/view.h \
+    src/jsonConfig.h \
     src/utils.h \
     src/options.h
