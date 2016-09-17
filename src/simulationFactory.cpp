@@ -46,9 +46,9 @@ void eng::SimulationFactory::generateFromJSON(Engine& engine) const {
     std::vector<eng::System*> systems = eng::System::from(*this->config);
     double decay = 1;  // AU to decay between each spawn
     for(auto system : systems) {
+        engine.spawn(*system, std::make_tuple(decay, 1));
         decay += system->getDiameter();
         std::cout << decay << std::endl;
-        engine.spawn(*system, std::make_tuple(decay, 1));
     }
 }
 
