@@ -146,8 +146,13 @@ struct OrbitalTrajectory {
     void compute();
     std::tuple<double, double, double, double> position() const;
     double getApproximativeDistanceToOrbited() const {
-        assert(this->is_orbit());
-        return this->have_semimajoraxis ? unit::meter_to_au(this->semimajoraxis) : this->distance;
+        assert(this->is_valid());
+        if(this->is_orbit()) {
+            return this->have_semimajoraxis ? unit::meter_to_au(this->semimajoraxis) : this->distance;
+        } else {
+            assert(this->is_precise_placement());
+            return sqrt(this->positionX * this->positionX + this->positionY * this->positionY);
+        }
     }
 
     // debug
