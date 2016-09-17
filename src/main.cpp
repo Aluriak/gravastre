@@ -31,9 +31,7 @@ int main(int argc, char *argv[]) {
         mode = eng::SimulationFactory::InitMode::BuiltinRandom;
     }
 
-    LOGOK
-    //eng::SimulationFactory factory(json_file, start_paused, mode);
-    eng::SimulationFactory factory("../data/player.json", start_paused, eng::SimulationFactory::InitMode::ReadJson);
+    eng::SimulationFactory factory(json_file, start_paused, mode);
     factory.build();
 
     return qapp.exec();
