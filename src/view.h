@@ -20,6 +20,7 @@
 #include "interactant.h"
 #include "astre.h"
 #include "system.h"
+#include "player.h"
 
 
 
@@ -34,13 +35,15 @@ namespace view {
 
     public:
         // Lifetime
-        Universe(eng::Engine&, bool start_paused=false, QWidget* parent=NULL);
+        Universe(eng::Engine&, const utils::JsonConfig& config, bool start_paused=false,
+                 QWidget* parent=NULL);
 
         // Methods
         void add_astre_to_graphic(eng::Interactant* inter) { inter->setParentItem(&this->reference); };
         void add_astre(eng::Interactant*);
         void add_astre(double, double, double, double, double);
         void togglePause() { this->pause = not this->pause; }
+        eng::Interactant* spawn_ship(double, double, double, double);
         void select(eng::Interactant*);
 
         virtual void mousePressEvent(QMouseEvent*);
@@ -63,6 +66,9 @@ namespace view {
         eng::Engine& engine;
         bool pause;  // true: no engine update
         bool follow_selection = false;  // true: keep selected object in view center
+        bool mode_spawn_ship  = false; // true: next left clic will launch a player ship
+        eng::PlayerShip* ship = nullptr;
+        utils::Player* player;
 
     };
 

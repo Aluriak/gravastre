@@ -2,8 +2,15 @@
 #include "view.h"
 
 
-view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent) :
+view::Universe::Universe(eng::Engine& engine, const utils::JsonConfig& config,
+                         bool start_paused, QWidget* parent) :
                          QGraphicsView(parent), engine(engine), pause(start_paused) {
+    // Player
+    this->player = config.getPlayers().size() > 0 ? config.getPlayer(0) : nullptr;
+    if(this->player) {
+        std::cout << "Universe player: " <<this->player << " > '"
+                  << this->player->name << "'" << std::endl;
+    }
     // Scene config
     this->scene = new QGraphicsScene;
     this->setScene(this->scene);
@@ -155,6 +162,17 @@ void view::Universe::translate(double x, double y) {
 
 
 
+/**
+ * Spawn the player space ship
+ */
+eng::Interactant* view::Universe::spawn_ship(double x, double y, double vx, double vy) {
+    assert(this->player != nullptr);
+    assert(ship == nullptr);
+    this->ship = new eng::PlayerShip(1e5, 6, x, y, vx, vy, this->player->name,
+                                     QColor(255, 255, 255));
+    return this->ship;
+}
+
 
 /**
  * Set given interactant as the one to be followed
@@ -233,13 +251,26 @@ void view::Universe::mouseReleaseEvent(QMouseEvent* event) {
         QLineF line = this->placement_line.line();
         double speed_x = line.x2() - line.x1();
         double speed_y = line.y2() - line.y1();
-        this->add_astre(
-            this->selected_mass,
-            unit::pixel_to_au(line.x1()),
-            unit::pixel_to_au(line.y1()),
-            unit::kilometer_to_meter(this->selected_speed * speed_x),
-            unit::kilometer_to_meter(this->selected_speed * speed_y)
-        );
+
+        if(mode_spawn_ship) {
+            mode_spawn_ship = false;
+            this->add_astre(this->spawn_ship(
+                unit::pixel_to_au(line.x1()),
+                unit::pixel_to_au(line.y1()),
+                unit::kilometer_to_meter(this->selected_speed * speed_x),
+                unit::kilometer_to_meter(this->selected_speed * speed_y)
+            ));
+            std::cout << "Player ship spawned." << std::endl;
+            this->select(ship);
+        } else {  // spawn a regular astre
+            this->add_astre(
+                this->selected_mass,
+                unit::pixel_to_au(line.x1()),
+                unit::pixel_to_au(line.y1()),
+                unit::kilometer_to_meter(this->selected_speed * speed_x),
+                unit::kilometer_to_meter(this->selected_speed * speed_y)
+            );
+        }
         this->placement_line.setVisible(false);
     }
     // Call default implementation
@@ -274,6 +305,30 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
     } else if(event->key() == Qt::Key_A) {
         this->selected_speed /= 10;
         std::cout << "selected speed decreased to " << this->selected_speed << std::endl;
+    } else if(event->key() == Qt::Key_S) {
+        if(this->player != nullptr) {
+            if(this->ship != nullptr) {
+                this->engine.remove(this->ship);
+                ship = nullptr;
+                std::cout << "Player ship destroyed." << std::endl;
+            } else if(this->mode_spawn_ship) {
+                std::cout << "Player mode deactivated." << std::endl;
+                mode_spawn_ship = false;
+            } else {
+                std::cout << "Player mode activated." << std::endl;
+                mode_spawn_ship = true;
+            }
+        } else {
+            std::cout << "No player available" << std::endl;
+        }
+    } else if(event->key() == Qt::Key_Right) {
+        if(ship != nullptr) ship->moveRight();
+    } else if(event->key() == Qt::Key_Left) {
+        if(ship != nullptr) ship->moveLeft();
+    } else if(event->key() == Qt::Key_Up) {
+        if(ship != nullptr) ship->moveUp();
+    } else if(event->key() == Qt::Key_Down) {
+        if(ship != nullptr) ship->moveDown();
     } else if(event->key() == Qt::Key_P) {
         this->togglePause();
         std::cout << (this->pause?"Paused":"Running") << std::endl;
