@@ -126,10 +126,10 @@ inline double tangent_slope(double semiminoraxis, double semimajoraxis,
  * Value holder of orbital trajectory
  */
 struct OrbitalTrajectory {
-    double mass, parent_mass, speed, distance,
+    double mass, parent_mass, speed, distance,  // mass: kg, speed: m.s-1, distance: m
            speedX, speedY, positionX, positionY,
-           apoapsis, periapsis, eccentricity,
-           semimajoraxis, semiminoraxis;
+           apoapsis, periapsis, eccentricity,  // apis: m
+           semimajoraxis, semiminoraxis;  // meter
     bool have_mass, have_parent_mass, have_speed, have_distance,
          have_speedX, have_speedY, have_positionX, have_positionY,
          have_apoapsis, have_periapsis, have_eccentricity,
@@ -145,6 +145,10 @@ struct OrbitalTrajectory {
     std::string haves() const;
     void compute();
     std::tuple<double, double, double, double> position() const;
+    double getApproximativeDistanceToOrbited() const {
+        assert(this->is_orbit());
+        return this->have_semimajoraxis ? unit::meter_to_au(this->semimajoraxis) : this->distance;
+    }
 
     // debug
     double getWidth() const { return this->semimajoraxis * 1.; }
