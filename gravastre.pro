@@ -7,6 +7,7 @@ QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += src/main.cpp \
     src/jsonConfig.cpp \
+    src/drawableVelocity.cpp \
     src/simulationFactory.cpp \
     src/interactant.cpp \
     src/astre.cpp \
@@ -18,6 +19,7 @@ SOURCES += src/main.cpp \
 
 HEADERS += \
     src/simulationFactory.h \
+    src/drawableVelocity.h \
     src/converters.h \
     src/interactant.h \
     src/astre.h \
