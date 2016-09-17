@@ -130,6 +130,11 @@ bool eng::Interactant::collide(const Interactant* const othr) const {
 
 
 
+
+void eng::Interactant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                             QWidget *widget) {
+}
+
 /**
  * PRIVATE: change position of graphical representation
  */

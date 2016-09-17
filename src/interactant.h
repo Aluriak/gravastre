@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include <QGraphicsItem>
+#include <QPainter>
 
 #include "converters.h"
 #include "orbit.h"
@@ -66,6 +67,10 @@ namespace eng {
                                     { this->trajectory = new orbit::OrbitalTrajectory(t); }
         bool haveTrajectory() const { return this->trajectory != NULL; }
 #endif
+
+    protected:
+        // Methods
+        void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*); // inherited
 
 
     private:
