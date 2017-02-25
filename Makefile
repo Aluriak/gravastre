@@ -13,3 +13,5 @@ solarsystem:
 	$(BUILD_DIR)gravastre $(DATA_DIR)solarsystem.json
 hammer:
 	$(BUILD_DIR)gravastre $(DATA_DIR)hammer_and_plume.json
+trappist:
+	$(BUILD_DIR)gravastre $(DATA_DIR)TRAPPIST-1_system.json

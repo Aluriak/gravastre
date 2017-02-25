@@ -1,0 +1,8 @@
+# TRAPPIST-1
+This system is the one exposed by NASA the February 22 2017.
+
+Information about the planets was found [on wikipedia](https://en.wikipedia.org/wiki/TRAPPIST-1).
+
+In order to visualize it fully, set PIXEL_PER_AU to `1500` and SIMULATION_SPEED to `8e1`.
+
+

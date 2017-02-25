@@ -1,0 +1,56 @@
+[{
+    "name": "TRAPPIST-1",
+    "radius": 79309.8,
+    "mass": 1.59084e29,
+    "color": [150, 0, 0],
+    "satellites": [{
+            "name": "b",
+            "radius": 6918.9,
+            "mass": 5.083e24,
+            "eccentricity": 0.081,
+            "semimajoraxis": 0.01111,
+            "color": [128, 128, 128]
+        },{
+            "name": "c",
+            "radius": 6727.776,
+            "mass": 8.2524e24,
+            "eccentricity": 0.083,
+            "semimajoraxis": 0.01522,
+            "color": [170, 165, 141]
+        },{
+            "name": "d",
+            "radius": 4918.412,
+            "mass": 2.4518e24,
+            "eccentricity": 0.070,
+            "semimajoraxis": 0.021,
+            "color": [170, 165, 141]
+        },{
+            "name": "e",
+            "radius": 5848.578,
+            "mass": 3.7076e24,
+            "eccentricity": 0.085,
+            "semimajoraxis": 0.028,
+            "color": [170, 165, 141]
+        },{
+            "name": "f",
+            "radius": 6657.695,
+            "mass": 4.0664e24,
+            "eccentricity": 0.063,
+            "semimajoraxis": 0.037,
+            "color": [170, 165, 141]
+        },{
+            "name": "g",
+            "radius": 7180.117,
+            "mass": 8.0132e24,
+            "eccentricity": 0.061,
+            "semimajoraxis": 0.045,
+            "color": [170, 165, 141]
+        },{
+            "name": "h",
+            "radius": 4810.1,
+            "semimajoraxis": 0.063,
+            "color": [170, 165, 141]
+        }
+
+    ]
+}]
