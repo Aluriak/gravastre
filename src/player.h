@@ -51,6 +51,7 @@ namespace eng {
         std::cout << "NSIN: " << (unit::degree_to_radian(rotation() - 90)) << std::endl;
         std::cout << "RCOS: " << round(cos(unit::degree_to_radian(rotation() - 90))) << std::endl;
         std::cout << "RSIN: " << round(sin(unit::degree_to_radian(rotation() - 90))) << std::endl;
+        std::cout << std::endl;
         }
 
         // Class Methods

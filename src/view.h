@@ -43,7 +43,9 @@ namespace view {
         void add_astre(eng::Interactant*);
         void add_astre(double, double, double, double, double);
         void togglePause() { this->pause = not this->pause; }
+#if ALLOW_PLAYER
         eng::Interactant* spawn_ship(double, double, double, double);
+#endif
         void select(eng::Interactant*);
 
         virtual void mousePressEvent(QMouseEvent*);
@@ -66,9 +68,11 @@ namespace view {
         eng::Engine& engine;
         bool pause;  // true: no engine update
         bool follow_selection = false;  // true: keep selected object in view center
+#if ALLOW_PLAYER
         bool mode_spawn_ship  = false; // true: next left clic will launch a player ship
         eng::PlayerShip* ship = nullptr;
         utils::Player* player;
+#endif
 
     };
 

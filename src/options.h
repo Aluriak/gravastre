@@ -6,7 +6,8 @@
  */
 #define PIXEL_PER_AU 300  // number of pixel representing an AU
 #define SIMULATION_SPEED 8e3  // how speedy is the simulation, compared to reality
-#define COLLISION true  // set to false for avoid collisions
+#define COLLISION true  // set to false to avoid collisions
+#define ALLOW_PLAYER true  // set to false to avoid player
 
 
 /**

@@ -5,12 +5,18 @@
 view::Universe::Universe(eng::Engine& engine, const utils::JsonConfig& config,
                          bool start_paused, QWidget* parent) :
                          QGraphicsView(parent), engine(engine), pause(start_paused) {
+#if ALLOW_PLAYER
     // Player
     this->player = config.getPlayers().size() > 0 ? config.getPlayer(0) : nullptr;
+    if(config.getPlayers().size() > 1) {
+        std::cout << "Multiple players detected. Only '"
+                  << this->player->name << "' will be used." << std::endl;
+    }
     if(this->player) {
         std::cout << "Universe player: " <<this->player << " > '"
                   << this->player->name << "'" << std::endl;
     }
+#endif
     // Scene config
     this->scene = new QGraphicsScene;
     this->setScene(this->scene);
@@ -162,6 +168,7 @@ void view::Universe::translate(double x, double y) {
 
 
 
+#if ALLOW_PLAYER
 /**
  * Spawn the player space ship
  */
@@ -172,6 +179,7 @@ eng::Interactant* view::Universe::spawn_ship(double x, double y, double vx, doub
                                      QColor(255, 255, 255));
     return this->ship;
 }
+#endif
 
 
 /**
@@ -252,6 +260,7 @@ void view::Universe::mouseReleaseEvent(QMouseEvent* event) {
         double speed_x = line.x2() - line.x1();
         double speed_y = line.y2() - line.y1();
 
+#if ALLOW_PLAYER
         if(mode_spawn_ship) {
             mode_spawn_ship = false;
             this->add_astre(this->spawn_ship(
@@ -262,7 +271,9 @@ void view::Universe::mouseReleaseEvent(QMouseEvent* event) {
             ));
             std::cout << "Player ship spawned." << std::endl;
             this->select(ship);
-        } else {  // spawn a regular astre
+        } else
+#endif
+        {  // spawn a regular astre
             this->add_astre(
                 this->selected_mass,
                 unit::pixel_to_au(line.x1()),
@@ -306,6 +317,7 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
         this->selected_speed /= 10;
         std::cout << "selected speed decreased to " << this->selected_speed << std::endl;
     } else if(event->key() == Qt::Key_S) {
+#if ALLOW_PLAYER
         if(this->player != nullptr) {
             if(this->ship != nullptr) {
                 this->engine.remove(this->ship);
@@ -329,6 +341,9 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
         if(ship != nullptr) ship->moveUp();
     } else if(event->key() == Qt::Key_Down) {
         if(ship != nullptr) ship->moveDown();
+#else
+        std::cout << "Not compiled with player support." << std::endl;
+#endif
     } else if(event->key() == Qt::Key_P) {
         this->togglePause();
         std::cout << (this->pause?"Paused":"Running") << std::endl;

@@ -80,21 +80,26 @@ void utils::JsonConfig::validateDocument() {
     } else {  // full form
         assert(this->doc.isObject());
         assert(not this->doc.isArray());
-        auto field_options = this->doc.object()[SYSTEM_JSON_ROOT_OPTIONS];
-        auto field_players = this->doc.object()[SYSTEM_JSON_ROOT_PLAYERS];
-        auto field_systems = this->doc.object()[SYSTEM_JSON_ROOT_SYSTEMS];
+        QJsonObject root = this->doc.object();  // needed to avoid segfault when using QJsonValueRef instances.
+        QJsonValueRef field_options = root[SYSTEM_JSON_ROOT_OPTIONS];
+#if ALLOW_PLAYER
+        QJsonValueRef field_players = root[SYSTEM_JSON_ROOT_PLAYERS];
+#endif
+        QJsonValueRef field_systems = root[SYSTEM_JSON_ROOT_SYSTEMS];
         // validates options
         if(not field_options.isNull()) {
             for(auto value : field_options.toObject()) {
                 assert(value.isObject());
             }
         }
+#if ALLOW_PLAYER
         // validates players
         if(not field_players.isNull()) {
             for(auto value : field_players.toObject()) {
                 assert(value.isObject());
             }
         }
+#endif
         // validates systems
         if(not field_systems.isNull()) {
             for(auto value : field_systems.toObject()) {
