@@ -67,11 +67,11 @@ void eng::PlayerShip::moveDown() {
  * [MOVEMENT] churn
  */
 void eng::PlayerShip::moveRight() {
-    this->setRotation(this->rotation() - 5);
+    this->setRotation(this->rotation() + 5);
     mylog();
 }
 void eng::PlayerShip::moveLeft() {
-    this->setRotation(this->rotation() + 5);
+    this->setRotation(this->rotation() - 5);
     mylog();
 }
 
