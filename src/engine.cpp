@@ -22,11 +22,9 @@ eng::Astre* eng::Engine::add_astre(eng::Astre* astre) {
 
 eng::Astre* eng::Engine::add_astre(eng::AstreData astre,
                                    eng::PositionAndSpeed pos_speed) {
-    double radius = std::get<1>(astre) > 0. ?
-            std::get<1>(astre) : Astre::mass_to_radius(std::get<0>(astre));
     return this->add_astre(
         std::get<0>(astre),  // mass
-        radius,
+        std::get<1>(astre),
         std::get<0>(pos_speed), std::get<1>(pos_speed),
         std::get<2>(pos_speed), std::get<3>(pos_speed),
         std::get<2>(astre),  // name
