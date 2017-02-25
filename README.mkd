@@ -59,7 +59,8 @@ See [`data/`](https://github.com/Aluriak/gravastre/tree/master/data) and [usage]
 - [X] astre selection
 - [X] config file for systems
 - [ ] options: show trajectory of selected Astre as an ellipse
-- [ ] astre realistic radius + token for replace astre when too far
+- [X] astre realistic radius
+- [ ] token for replace astre when too far
 - [ ] creation of an Astre trajectory knowing (all?) Astres
 - [ ] print astre name when mouse over it (or its token)
 - [ ] config file for constants (+option for using hard-coded ones)
@@ -75,8 +76,21 @@ Units used by the Astre class are real units ; conversions to non real units is 
 when needed by the computations.
 
 All positions and distances are given in [Astronomical Unit](https://en.wikipedia.org/wiki/Astronomical_unit).
-The *reference*, shown as a white rectangle, is placed at (0;0).
+The *reference*, optionally shown as a white rectangle, is placed at (0;0).
 
 Speeds are in [meter per second](https://en.wikipedia.org/wiki/SI_base_unit).
 
 
+### Adapting the simulation
+Function to the system you want to seek, you could want to modify values found in the [options file](src/options.h).
+
+By default, these values works well with a representation of the telluric planets of the solar system,
+but for other systems like [TRAPPIST-1](TRAPPIST-1_system.json), you could want to tweat some values a little.
+
+- PIXEL_PER_AU: number of pixel in one [astromical unit](https://en.wikipedia.org/wiki/Astronomical_unit). Increase it for a larger world.
+- SIMULATION_SPEED: number of second passing between each computation step.
+- COLLISION: if set to true, when two astres collides (this is based on their radius), the heavier absorbs the other. Its speed is modified in consequence.
+- DEFAULT_RADIUS_BY_MASS_FACTOR: factor used for the computation of a radius from the mass. Useful to get radius giving an hint about mass. Increase it to get smaller radii.
+- RADIUS_TO_PIXEL_FACTOR: in case radius (km) is deduced from input file, it will be converted using PIXEL_PER_AU and this value. 1=realistic (but invisible in most cases), more=bigger radii.
+- ALWAYS_USE_DEFAULT_RADIUS: if set to true, ignore radius given in input file and use the *function to mass* radius.
+- VIEW_ENGINE_TIME_UPDATE: number of millisecond between each engine update/computation step.
