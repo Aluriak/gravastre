@@ -98,3 +98,5 @@ namespace utils {
 // Player data
 #define SYSTEM_JSON_KEY_ISPLAYER "is player"  // bool
 #define SYSTEM_JSON_KEY_KEY_THRUST "key:thrust"  // string
+#define SYSTEM_JSON_KEY_KEY_ROTATE_LEFT "key:rotate left"  // string
+#define SYSTEM_JSON_KEY_KEY_ROTATE_RIGHT "key:rotate right"  // string

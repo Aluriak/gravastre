@@ -3,6 +3,9 @@
     },
     "Players": {
         "lucas": {
+            "key:thrust": "up",
+            "key:rotate left": "left",
+            "key:rotate right": "right"
         }
     },
     "Systems": [{
