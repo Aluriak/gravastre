@@ -49,9 +49,13 @@ namespace eng {
         void absorbs(eng::Interactant* const);
 
         // Class Methods
-        static double mass_to_radius(double mass) {
-            double log_mass = log10(mass/10e22);
+        static double mass_to_radius(double mass) {  // returned radius in km
+            double log_mass = log10(mass/DEFAULT_RADIUS_BY_MASS_FACTOR);
             return (log_mass >=0 ? log_mass : 0) + 1;
+        }
+        static double km_to_pixel_radius(double radius_km) {
+            double radius_pixel = unit::kilometer_to_pixel(radius_km) * RADIUS_TO_PIXEL_FACTOR;
+            return radius_pixel;
         }
 
         // Accessors

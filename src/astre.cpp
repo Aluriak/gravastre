@@ -59,11 +59,29 @@ void eng::Astre::mousePressEvent(QGraphicsSceneMouseEvent* event) {
  * PRIVATE: Initialize fields. Called by constructors.
  * if radius is valid, it will override the radius.
  */
-void eng::Astre::init_attributes(const QColor new_color, const double new_radius) {
-    this->radius = new_radius > 0 ? new_radius : Astre::mass_to_radius(this->getMass());
+void eng::Astre::init_attributes(const QColor new_color, const double new_radius_km) {
+#if ALWAYS_USE_DEFAULT_RADIUS
+    this->radius_km = -1;
+    this->radius_px = Astre::mass_to_radius(this->getMass());
+    std::cout << this->getName() << " use default radius: " << this->radius_px << "px" << std::endl;
+#else
+    if(new_radius_km > 0) {  // use the brand new one radius in km if given
+        this->radius_km = new_radius_km;
+    }
+    if(this->radius_km > 0.) {
+        std::cout << this->getName() << " use given radius: " << this->radius_km;
+        this->radius_px = Astre::km_to_pixel_radius(this->radius_km);
+        std::cout << " -> " << this->radius_px << std::endl;
+    } else {  // no radius in km available: let's use the mass.
+        this->radius_px = Astre::mass_to_radius(this->getMass());
+        std::cout << this->getName() << " use default radius: " << this->radius_px << "px" << std::endl;
+    }
+#endif
+
+    // Bounding rectangle, needed by QPainter.
     qreal penWidth = 1;
-    this->drawing_rect = QRectF(-radius - penWidth / 2., -radius - penWidth / 2.,
-                                radius + penWidth, radius + penWidth);
+    this->drawing_rect = QRectF(-radius_px - penWidth / 2., -radius_px - penWidth / 2.,
+                                radius_px + penWidth, radius_px + penWidth);
     // graphics color
     this->color = new_color != nullptr ? new_color : this->color;
     //this->setFlag(QGraphicsItem::ItemIsSelectable, true);
