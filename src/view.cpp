@@ -11,6 +11,13 @@ view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent
     this->setMouseTracking(true);
     this->setTransformationAnchor(QGraphicsView::NoAnchor);
     this->scene->setBackgroundBrush(QBrush(Qt::black));
+
+    // Data
+    this->selected_mass = 1e3;
+    this->selected_speed = 1e-1;
+    this->drag_translation_x = 0.;
+    this->drag_translation_y = 0.;
+
     // Items config
 #if VIEW_VISIBLE_REFERENCE
     this->reference.setRect(-2, -2, 4, 4);
@@ -36,17 +43,16 @@ view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent
         if(maximal_mass == NULL or astre->getMass() > maximal_mass->getMass()) {
             maximal_mass = astre;
         }
+        std::cout << astre->getName() << ": " << astre->getRadius() << std::endl;
     }
     if(maximal_mass != NULL) {
-        //this->centerOn(maximal_mass->getX(), maximal_mass->getY());
+        std::cout << "Heavier Astre is " << maximal_mass->getName() << std::endl;
+        this->centerOn(maximal_mass->getX(), maximal_mass->getY());
+        this->selected_object = maximal_mass;
+        this->follow_selection = true;
+    } else {
+        this->centerOn(0, 0);
     }
-    this->centerOn(0, 0);
-
-    // Data
-    this->selected_mass = 1e3;
-    this->selected_speed = 1e-1;
-    this->drag_translation_x = 0.;
-    this->drag_translation_y = 0.;
 
     // Configure the timer
     connect(&this->update_call, SIGNAL(timeout()), this, SLOT(update_engine()));
