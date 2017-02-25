@@ -4,11 +4,11 @@
 /**
  * Object lifetime
  */
-eng::Astre::Astre(double mass, double radius, double pos_x, double pos_y,
+eng::Astre::Astre(double mass, double radius_km, double pos_x, double pos_y,
                   double speed_x, double speed_y, std::string name, QColor color) :
     Interactant(mass, pos_x, pos_y, speed_x, speed_y, name)
 {
-    this->init_attributes(color, radius);
+    this->init_attributes(color, radius_km);
 }
 
 // Version without radius: deduce radius from mass

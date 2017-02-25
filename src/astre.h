@@ -55,7 +55,7 @@ namespace eng {
         }
 
         // Accessors
-        double getRadius() const { return this->radius; }
+        double getRadius() const { return this->radius_px; }
         QColor getColor() const { return this->color; }
         QRectF boundingRect() const { return this->drawing_rect; };
 
@@ -71,7 +71,8 @@ namespace eng {
         void init_attributes(const QColor=nullptr, const double=-1);
 
         // Attributes
-        double radius; // radius in pixel
+        double radius_km = -1; // radius in km
+        double radius_px = -1; // radius in pixel
         QColor color;
         QRectF drawing_rect;
 

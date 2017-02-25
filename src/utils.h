@@ -18,7 +18,7 @@
 #define SYSTEM_JSON_KEY_NAME "name"
 #define SYSTEM_JSON_KEY_MASS "mass"
 #define SYSTEM_JSON_KEY_COLOR "color"
-#define SYSTEM_JSON_KEY_RADIUS "radius"
+#define SYSTEM_JSON_KEY_RADIUS "radius"  // km
 #define SYSTEM_JSON_KEY_SATELLITES "satellites"
 // Orbital data (and expected units)
 #define SYSTEM_JSON_KEY_SPEED "speed"  // m.s-1
