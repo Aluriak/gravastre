@@ -46,6 +46,6 @@
 #define VIEW_VISIBLE_REFERENCE false
 #define VIEW_SELECTABLE_REFERENCE false  // true: some bugs can appear
 #define VIEW_ENGINE_TIME_UPDATE 5  // milliseconds
-#define DEFAULT_RADIUS_BY_MASS_FACTOR 10e22  // factor used to compute a default radius from mass
+#define DEFAULT_RADIUS_BY_MASS_FACTOR 1e23  // factor used to compute a default radius from mass
 #define RADIUS_TO_PIXEL_FACTOR 1e7  // factor used to compute radius in pixel from radius in km
 #define ALWAYS_USE_DEFAULT_RADIUS false  // always use default radius, even if it is provided
