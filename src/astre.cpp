@@ -30,7 +30,6 @@ eng::Astre::~Astre() {}
 void eng::Astre::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                        QWidget *widget) {
     painter->setBrush(QBrush(this->color));
-    // painter->setPen(QPen(this->color));  // outline color
     painter->drawEllipse(QPointF(0, 0), radius_px, radius_px);
 }
 
