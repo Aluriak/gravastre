@@ -12,6 +12,8 @@
  * Next are defined constants that are immutable, relative to
  * physical definitions, or deduced from previously defined constants.
  */
+#define PI (double)3.141592
+#define PI_DIVIDE_180 (double)57.296
 // conversion units
 #define METER_PER_KILOMETER 1e3
 #define KILOMETER_PER_METER 1./METER_PER_KILOMETER
@@ -87,6 +89,13 @@ namespace unit {
     }
     inline double simulation_speed_to_real_speed(double speed) {
         return speed / SIMULATION_SPEED;
+    }
+
+    inline double degree_to_radian(double degree) {
+        return degree / PI_DIVIDE_180;
+    }
+    inline double radian_to_degree(double radian) {
+        return radian * PI_DIVIDE_180;
     }
 
     /**

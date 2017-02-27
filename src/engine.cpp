@@ -1,16 +1,16 @@
 #include "engine.h"
 
 
-eng::Astre* eng::Engine::add_astre(eng::Astre* astre) {
+eng::Interactant* eng::Engine::add(eng::Interactant* astre) {
     assert(astre != NULL);
     this->astres.push_back(astre);
 #if DATA_ASTRE_HOLDS_SYSTEM
     astre->setTrajectory(system.getTrajectory());
 #endif
 #if DEBUG_CREATION_LOGS
-    std::cerr << "Creation of " << astre->getName() << ", new Astre at" << std::endl
+    std::cerr << "Creation of " << astre->getName() << ", new Interactant at" << std::endl
               << "\tmass=" << astre->getMass()
-              << "; radius=" << astre->getRadius() << std::endl
+              << "; radius=" << astre->getSize() << std::endl
               << "\tposition=(" << astre->getX() << ";"
                                 << astre->getY() << ")" << std::endl
               << "\tspeed=(" << astre->getSpeedX() << ";"
@@ -20,13 +20,13 @@ eng::Astre* eng::Engine::add_astre(eng::Astre* astre) {
 }
 
 
-eng::Astre* eng::Engine::add_astre(eng::AstreData astre,
+eng::Interactant* eng::Engine::add(eng::AstreData astre,
                                    eng::PositionAndSpeed pos_speed) {
-    return this->add_astre(
+    return this->add(
         std::get<0>(astre),  // mass
-        std::get<1>(astre),
-        std::get<0>(pos_speed), std::get<1>(pos_speed),
-        std::get<2>(pos_speed), std::get<3>(pos_speed),
+        std::get<1>(astre),  // radius
+        std::get<0>(pos_speed), std::get<1>(pos_speed),  // position
+        std::get<2>(pos_speed), std::get<3>(pos_speed),  // speed
         std::get<2>(astre),  // name
         std::get<3>(astre)  // color
     );
@@ -34,24 +34,26 @@ eng::Astre* eng::Engine::add_astre(eng::AstreData astre,
 
 
 // no radius in this one
-eng::Astre* eng::Engine::add_astre(double mass, double pos_x, double pos_y,
+eng::Interactant* eng::Engine::add(double mass, double pos_x, double pos_y,
                                    double speed_x, double speed_y,
                                    std::string name, QColor color) {
     assert(mass > 0.);
-    return this->add_astre(
-        mass, Astre::mass_to_radius(mass),
-        pos_x, pos_y,
-        speed_x, speed_y,
-        name, color
+    return this->add(
+        new Astre(
+            mass,
+            pos_x, pos_y,
+            speed_x, speed_y,
+            name, color
+        )
     );
 }
 
 
-eng::Astre* eng::Engine::add_astre(double mass, double radius, double pos_x,
+eng::Interactant* eng::Engine::add(double mass, double radius, double pos_x,
                                    double pos_y, double speed_x, double speed_y,
                                    std::string name, QColor color) {
     assert(mass > 0.);
-    return this->add_astre(
+    return this->add(
         new Astre(
             mass, radius,
             pos_x, pos_y,
@@ -59,6 +61,31 @@ eng::Astre* eng::Engine::add_astre(double mass, double radius, double pos_x,
             name, color
         )
     );
+}
+
+
+
+/**
+ * Remove given interactant from engine, without call its destructor.
+ * Return true if something have been removed.
+ */
+bool eng::Engine::remove(eng::Interactant * const target, bool delete_it) {
+    if(delete_it) {
+        uint64_t old_len = astres.size();
+        astres.remove(target);
+        return astres.size() != old_len;
+    } else {  // don't delete it
+        bool found = false;
+        std::list<Interactant*> new_list;
+        for(auto elem : this->astres) {
+            if(elem != target) {
+                new_list.push_back(elem);
+                found = true;
+            }
+        }
+        this->astres = new_list;
+        return found;
+    }
 }
 
 
@@ -77,7 +104,7 @@ void eng::Engine::spawn(System& system, PositionAndSpeed offset) {
     double spd_x = std::get<2>(offset) + std::get<2>(astre_pos);
     double spd_y = std::get<3>(offset) + std::get<3>(astre_pos);
     PositionAndSpeed astre_absolute_pos(std::make_tuple(pos_x, pos_y, spd_x, spd_y));
-    this->add_astre(system.getAstre(), astre_absolute_pos);
+    this->add(system.getAstre(), astre_absolute_pos);
     for(auto subsystem : system.getSubsystems()) {
         this->spawn(*subsystem, astre_absolute_pos);
     }
@@ -93,8 +120,8 @@ void eng::Engine::update() {
         it_interactor = it_astres;
         it_interactor++;  // don't perform interactions between same astres
         for(; it_interactor != this->astres.end(); it_interactor++) {
-            Astre* astre = *it_astres;
-            Astre* other = *it_interactor;
+            Interactant* astre = *it_astres;
+            Interactant* other = *it_interactor;
             double dist = astre->distTo(other);
             assert(astre != other);
             if(astre->updatable() and other->updatable()) {
@@ -120,7 +147,7 @@ void eng::Engine::update() {
     // update all astres
     it_astres = this->astres.begin();
     for(; it_astres != this->astres.end(); it_astres++) {
-        Astre* astre = *it_astres;
+        Interactant* astre = *it_astres;
         if(astre->updatable()) {
             astre->physic_update();
         } else {  // astre was destroyed, removed,…
@@ -129,7 +156,7 @@ void eng::Engine::update() {
         }
     }
     // debug
-    //std::cout << "Astre count: " << this->astres.size() << std::endl;
+    //std::cout << "Interactant count: " << this->astres.size() << std::endl;
 }
 
 

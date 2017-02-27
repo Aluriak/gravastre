@@ -7,13 +7,16 @@
 #include <cmath>
 
 #include <QGraphicsItem>
+#include <QPainter>
 
 #include "converters.h"
 #include "orbit.h"
+#include "drawableVelocity.h"
 
 
 
 
+namespace view {class DrawableVelocity;}
 namespace eng {
 
 
@@ -42,12 +45,19 @@ namespace eng {
         double getY() const { return this->position_y; }
         double getSpeedX() const { return this->speed_x; }
         double getSpeedY() const { return this->speed_y; }
+        double getAccelX() const { return this->last_accel_x; }
+        double getAccelY() const { return this->last_accel_y; }
         double getMass() const { return this->mass; }
+        virtual double getSize() const = 0;
+        void setDrawVelocity(const bool draw);
+        virtual double getBasicAccelX() const { return 0; }
+        virtual double getBasicAccelY() const { return 0; }
 
         // Predicates
         bool collide(const Interactant* const) const;
         bool bigger(const Interactant* const othr) const { return this->mass > othr->mass; }
         bool updatable() const { return not this->nullified; }
+        bool isDrawVelocity() const { return this->drawer_velocity != nullptr; }
 
 
 #if VIEW_INITIAL_POSITION
@@ -63,6 +73,10 @@ namespace eng {
         bool haveTrajectory() const { return this->trajectory != NULL; }
 #endif
 
+    protected:
+        // Methods
+        void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*); // inherited
+
 
     private:
         // Methods
@@ -74,9 +88,11 @@ namespace eng {
         double mass; // mass in kg
         double position_x, position_y; // position in astronomic unit (AU)
         double speed_x, speed_y; // speed in meter per second (m.s-1)
-        double accel_x, accel_y;
+        double accel_x, accel_y; // m.s-2
+        double last_accel_x, last_accel_y;  // previous value of acceleration
         bool visible;  // false if should be hide
         bool nullified;  // true if should be free'd
+        view::DrawableVelocity* drawer_velocity = nullptr;
 
 #if DEBUG_SUN_DIST
         double dist_to_sun_min, dist_to_sun_max;

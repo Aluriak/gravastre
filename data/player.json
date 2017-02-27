@@ -1,0 +1,26 @@
+{
+    "Options": {
+    },
+    "Players": {
+        "lucas": {
+            "key:thrust": "up",
+            "key:rotate left": "left",
+            "key:rotate right": "right"
+        }
+    },
+    "Systems": [{
+            "name": "sun",
+            "mass": 2e30,
+            "color": [255, 255, 0],
+            "satellites": [{
+                    "name": "earth",
+                    "is player": true,
+                    "mass": 5.98e24,
+                    "eccentricity": 0.01671022,
+                    "semimajoraxis": 1.0000001124,
+                    "color": [0, 0, 255]
+                }
+            ]
+        }
+    ]
+}

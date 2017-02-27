@@ -1,13 +1,24 @@
 #include "system.h"
 
 
-eng::System::System() {}
+//eng::System::System() {}
 
 
-eng::System::System(AstreData astre, orbit::OrbitalTrajectory trajectory,
-                    std::vector<System*> subsystems) :
-                        astre(astre), trajectory(trajectory),
-                        subsystems(subsystems) {}
+eng::System::System(SystemData data) {
+    std::tie(astre, trajectory, subsystems) = data;
+    this->computeDiameter();
+}
+
+
+
+void eng::System::computeDiameter() {
+    this->diameter = 1;  // one AU at least of difference
+    for(auto subsystem : this->subsystems) {
+        double subsystem_diameter = subsystem->getTrajectory().getApproximativeDistanceToOrbited() + subsystem->getDiameter();
+        this->diameter = diameter > subsystem_diameter ? this->diameter : subsystem_diameter;
+    }
+}
+
 
 
 /**
@@ -15,38 +26,43 @@ eng::System::System(AstreData astre, orbit::OrbitalTrajectory trajectory,
  * seeking for Astre definitions.
  * Return a new System, spawning Astre found by parsing.
  */
-std::vector<eng::System*> eng::System::from_json(std::string filename) {
-    return System::from_json(utils::json_from_file(filename));
+std::vector<eng::System*> eng::System::from(utils::JsonConfig& config) {
+    return System::from(config.getSystems());
 }
-std::vector<eng::System*> eng::System::from_json(QJsonArray json, double* parent_mass) {
+
+std::vector<eng::System*> eng::System::from(QJsonArray json, double* parent_mass) {
     std::vector<eng::System*> systems;
     for(auto value : json) {
         assert(value.isObject());
         QJsonObject object = value.toObject();
         System::validate(object);
-        orbit::OrbitalTrajectory trajectory = orbit::OrbitalTrajectory(object,
-                                                                       parent_mass);
+        orbit::OrbitalTrajectory trajectory = orbit::OrbitalTrajectory(object, parent_mass);
 #if DEBUG_ORBITAL_TRAJECTORY_LOGS
         trajectory.debug();
 #endif
         if(parent_mass != NULL and not trajectory.is_valid()) {
             // Logs the problem if should be orbiting something
-            std::cerr << "The System of name " << object[SYSTEM_JSON_KEY_NAME].toString().toStdString() << " doesn't have enough data to be placed in orbit. It will not be created." << std::endl;
+            std::cerr << "The System named " << object[SYSTEM_JSON_KEY_NAME].toString().toStdString() << " doesn't have enough data to be placed in orbit. It will not be created." << std::endl;
         } else { // no parent OR orbit found
             // Create the new System representing object
             AstreData astre(System::json_to_astre(object));
-            systems.push_back(new System(
+            auto sub_systems = System::from(object[SYSTEM_JSON_KEY_SATELLITES].toArray(),
+                                            &std::get<0>(astre));
+
+            // the diameter is 0 if no satellite, or the distance of the satellite
+            systems.push_back(new System(SystemData(
                 astre,
                 trajectory,
-                System::from_json(
-                    object[SYSTEM_JSON_KEY_SATELLITES].toArray(),
-                    &std::get<0>(astre)
-                )
-            ));
+                sub_systems
+            )));
         }
     }
     return systems;
 }
+
+
+
+
 
 eng::AstreData eng::System::json_to_astre(QJsonObject json) {
     return AstreData(

@@ -2,8 +2,21 @@
 #include "view.h"
 
 
-view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent) :
+view::Universe::Universe(eng::Engine& engine, const utils::JsonConfig& config,
+                         bool start_paused, QWidget* parent) :
                          QGraphicsView(parent), engine(engine), pause(start_paused) {
+#if ALLOW_PLAYER
+    // Player
+    this->player = config.getPlayers().size() > 0 ? config.getPlayer(0) : nullptr;
+    if(config.getPlayers().size() > 1) {
+        std::cout << "Multiple players detected. Only '"
+                  << this->player->name << "' will be used." << std::endl;
+    }
+    if(this->player) {
+        std::cout << "Universe player: " <<this->player << " > '"
+                  << this->player->name << "'" << std::endl;
+    }
+#endif
     // Scene config
     this->scene = new QGraphicsScene;
     this->setScene(this->scene);
@@ -34,16 +47,15 @@ view::Universe::Universe(eng::Engine& engine, bool start_paused, QWidget* parent
     this->placement_line.setVisible(false);
     this->placement_line.setParentItem(&this->reference);
     this->scene->addItem(&reference);
-    this->selected_object = &this->reference;
+    this->selected_object = nullptr;
 
     // Register all Astre as graphic object, prepare the view.
-    eng::Astre* maximal_mass = NULL;  // will center the view on the heavier astre
-    for(auto astre : this->engine.getAstres()) {
-        this->add_astre(astre);
+    eng::Interactant* maximal_mass = NULL;  // will center the view on the heavier astre
+    for(auto astre : this->engine.getInteractants()) {
+        this->add_astre_to_graphic(astre);
         if(maximal_mass == NULL or astre->getMass() > maximal_mass->getMass()) {
             maximal_mass = astre;
         }
-        std::cout << astre->getName() << ": " << astre->getRadius() << std::endl;
     }
     if(maximal_mass != NULL) {
         std::cout << "Heavier Astre is " << maximal_mass->getName() << std::endl;
@@ -67,10 +79,11 @@ void view::Universe::add_astre(double mass, double x, double y, double vx, doubl
     // Random color
     QColor random_color(utils::randnum(0, 255), utils::randnum(0, 255), utils::randnum(0, 255));
     // Create the astre
-    this->add_astre(this->engine.add_astre(mass, x, y, vx, vy, "unamed", random_color));
+    this->add_astre(new eng::Astre(mass, x, y, vx, vy, "unamed", random_color));
 }
-void view::Universe::add_astre(eng::Astre* astre) {
-    astre->setParentItem(&this->reference);
+void view::Universe::add_astre(eng::Interactant* interactant) {
+    this->engine.add(interactant);
+    this->add_astre_to_graphic(interactant);
 }
 
 
@@ -82,6 +95,7 @@ void view::Universe::update_engine() {
         this->engine.update();
         // View is centered on selected object
         if(this->follow_selection) {
+            assert(this->selected_object);
             double x = this->selected_object->pos().x();
             double y = this->selected_object->pos().y();
             this->setSceneRect(
@@ -158,6 +172,40 @@ void view::Universe::translate(double x, double y) {
 //}
 
 
+
+#if ALLOW_PLAYER
+/**
+ * Spawn the player space ship
+ */
+eng::Interactant* view::Universe::spawn_ship(double x, double y, double vx, double vy) {
+    assert(this->player != nullptr);
+    assert(ship == nullptr);
+    this->ship = new eng::PlayerShip(1e5, 6, x, y, vx, vy, this->player->name,
+                                     QColor(255, 255, 255));
+    return this->ship;
+}
+#endif
+
+
+/**
+ * Set given interactant as the one to be followed
+ */
+void view::Universe::select(eng::Interactant* interactant) {
+#if VIEW_TRAJECTORY_DATA_ON_SELECTED
+    // change objects states
+    if(this->selected_object != nullptr)
+        this->selected_object->setDrawVelocity(false);
+    if(interactant != nullptr)
+        interactant->setDrawVelocity(true);
+#endif
+    // change this state
+    this->follow_selection = interactant != nullptr;
+    this->selected_object = interactant;
+    this->reference.setPos(0, 0);
+}
+
+
+
 void view::Universe::mousePressEvent(QMouseEvent* event) {
     QPointF scene_coords = this->mapToScene(QPoint(event->x(), event->y()));
     if(event->button() == Qt::LeftButton) {
@@ -171,13 +219,10 @@ void view::Universe::mousePressEvent(QMouseEvent* event) {
                 scene_coords.y() - this->reference.pos().y()
             );
         } else { // an item was clicked
-#if VIEW_SELECTABLE_REFERENCE
-            this->selected_object = clicked;
-#else
             if(clicked != &this->reference) {
-                this->selected_object = clicked;
+                // the item is necessarily an Interactant.
+                this->select((eng::Interactant*) clicked);
             }
-#endif
             std::cerr << "Item selected has changed to " << clicked << "\n";
 #if VIEW_DETAILS_ON_MOUSE_CLIC
             // TODO: print informations on astre and its trajectory
@@ -219,13 +264,29 @@ void view::Universe::mouseReleaseEvent(QMouseEvent* event) {
         QLineF line = this->placement_line.line();
         double speed_x = line.x2() - line.x1();
         double speed_y = line.y2() - line.y1();
-        this->add_astre(
-            this->selected_mass,
-            unit::pixel_to_au(line.x1()),
-            unit::pixel_to_au(line.y1()),
-            unit::kilometer_to_meter(this->selected_speed * speed_x),
-            unit::kilometer_to_meter(this->selected_speed * speed_y)
-        );
+
+#if ALLOW_PLAYER
+        if(mode_spawn_ship) {
+            mode_spawn_ship = false;
+            this->add_astre(this->spawn_ship(
+                unit::pixel_to_au(line.x1()),
+                unit::pixel_to_au(line.y1()),
+                unit::kilometer_to_meter(this->selected_speed * speed_x),
+                unit::kilometer_to_meter(this->selected_speed * speed_y)
+            ));
+            std::cout << "Player ship spawned." << std::endl;
+            this->select(ship);
+        } else
+#endif
+        {  // spawn a regular astre
+            this->add_astre(
+                this->selected_mass,
+                unit::pixel_to_au(line.x1()),
+                unit::pixel_to_au(line.y1()),
+                unit::kilometer_to_meter(this->selected_speed * speed_x),
+                unit::kilometer_to_meter(this->selected_speed * speed_y)
+            );
+        }
         this->placement_line.setVisible(false);
     }
     // Call default implementation
@@ -260,6 +321,34 @@ void view::Universe::keyPressEvent(QKeyEvent* event) {
     } else if(event->key() == Qt::Key_A) {
         this->selected_speed /= 10;
         std::cout << "selected speed decreased to " << this->selected_speed << std::endl;
+    } else if(event->key() == Qt::Key_S) {
+#if ALLOW_PLAYER
+        if(this->player != nullptr) {
+            if(this->ship != nullptr) {
+                this->engine.remove(this->ship);
+                ship = nullptr;
+                std::cout << "Player ship destroyed." << std::endl;
+            } else if(this->mode_spawn_ship) {
+                std::cout << "Player mode deactivated." << std::endl;
+                mode_spawn_ship = false;
+            } else {
+                std::cout << "Player mode activated." << std::endl;
+                mode_spawn_ship = true;
+            }
+        } else {
+            std::cout << "No player available" << std::endl;
+        }
+    } else if(event->key() == Qt::Key_Right) {
+        if(ship != nullptr) ship->moveRight();
+    } else if(event->key() == Qt::Key_Left) {
+        if(ship != nullptr) ship->moveLeft();
+    } else if(event->key() == Qt::Key_Up) {
+        if(ship != nullptr) ship->moveUp();
+    } else if(event->key() == Qt::Key_Down) {
+        if(ship != nullptr) ship->moveDown();
+#else
+        std::cout << "Not compiled with player support." << std::endl;
+#endif
     } else if(event->key() == Qt::Key_P) {
         this->togglePause();
         std::cout << (this->pause?"Paused":"Running") << std::endl;

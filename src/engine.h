@@ -1,6 +1,6 @@
 #pragma once
 
-#include <assert.h>
+#include <cassert>
 #include <cmath>
 #include <iostream>
 #include <list>
@@ -8,6 +8,7 @@
 
 #include "converters.h"
 #include "system.h"
+#include "interactant.h"
 #include "astre.h"
 
 
@@ -19,23 +20,24 @@ namespace eng {
 
     public:
         //Engine();
-        Astre* add_astre(Astre* astre);
-        Astre* add_astre(AstreData, PositionAndSpeed);
-        Astre* add_astre(double, double, double, double, double,
+        Interactant* add(Interactant* astre);
+        Interactant* add(AstreData, PositionAndSpeed);
+        Interactant* add(double, double, double, double, double,
                          std::string="unamed", QColor=Qt::white);
-        Astre* add_astre(double, double, double, double, double, double,
+        Interactant* add(double, double, double, double, double, double,
                          std::string="unamed", QColor=Qt::white);
         void spawn(System&, std::tuple<double, double> =std::make_tuple(0, 0));
         void spawn(System&, PositionAndSpeed);
         void update();
+        bool remove(Interactant * const, bool delete_it=true);
         void clear_all();
 
-        std::list<Astre*>::iterator begin() { return astres.begin(); };
-        std::list<Astre*>::iterator end() { return astres.end(); };
-        std::list<Astre*> getAstres() const { return this->astres; }
+        std::list<Interactant*>::iterator begin() { return astres.begin(); };
+        std::list<Interactant*>::iterator end() { return astres.end(); };
+        std::list<Interactant*> getInteractants() const { return this->astres; }
 
     private:
-        std::list<Astre*> astres;
+        std::list<Interactant*> astres;
 
     };
 

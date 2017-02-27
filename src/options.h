@@ -6,7 +6,8 @@
  */
 #define PIXEL_PER_AU 300  // number of pixel representing an AU
 #define SIMULATION_SPEED 8e3  // how speedy is the simulation, compared to reality
-#define COLLISION true  // set to false for avoid collisions
+#define COLLISION true  // set to false to avoid collisions
+#define ALLOW_PLAYER true  // set to true to allow a player
 
 
 /**
@@ -40,11 +41,10 @@
  */
 #define VIEW_ORBITAL_TRAJECTORY DATA_ASTRE_HOLDS_TRAJECTORY && false
 #define VIEW_INITIAL_POSITION false
-#define VIEW_DETAILS_ON_MOUSE_CLIC true
+#define VIEW_TRAJECTORY_DATA_ON_SELECTED true
 #define VIEW_REVERSED_TRANSLATION false
 #define VIEW_TRANSLATION_RATIO 1.0
 #define VIEW_VISIBLE_REFERENCE false
-#define VIEW_SELECTABLE_REFERENCE false  // true: some bugs can appear
 #define VIEW_ENGINE_TIME_UPDATE 5  // milliseconds
 #define DEFAULT_RADIUS_BY_MASS_FACTOR 1e23  // factor used to compute a default radius from mass
 #define RADIUS_TO_PIXEL_FACTOR 1e7  // factor used to compute radius in pixel from radius in km

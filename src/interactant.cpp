@@ -18,14 +18,15 @@ eng::Interactant::~Interactant() {
 
 void eng::Interactant::physic_update() {
     // add acceleration to speed and speed to position
-    // F=ma <=> acceleration = F/mass
-    this->speed_x += this->accel_x / this->mass;
-    this->speed_y += this->accel_y / this->mass;
+    this->speed_x += this->accel_x;
+    this->speed_y += this->accel_y;
     this->position_x += unit::real_speed_to_simulation_speed(unit::meter_to_au(speed_x));
     this->position_y += unit::real_speed_to_simulation_speed(unit::meter_to_au(speed_y));
     // prepare the next step
-    this->accel_x = 0;
-    this->accel_y = 0;
+    this->last_accel_x = this->accel_x;
+    this->last_accel_y = this->accel_y;
+    this->accel_x = this->getBasicAccelX();
+    this->accel_y = this->getBasicAccelY();
     // Graphic
     this->setGraphicalPosition();
 }
@@ -43,8 +44,9 @@ void eng::Interactant::accelerateTo(eng::Interactant* const othr, double dist) {
     double attraction = unit::attraction_force_meter(
             this->mass, othr->mass, unit::au_to_meter(dist));
     // add it to acceleration counters
-    this->accel_x += attraction * ((this->position_x - othr->position_x) / dist);
-    this->accel_y += attraction * ((this->position_y - othr->position_y) / dist);
+    // F=ma <=> acceleration = F/mass
+    this->accel_x += attraction * ((this->position_x - othr->position_x) / dist) / this->mass;
+    this->accel_y += attraction * ((this->position_y - othr->position_y) / dist) / this->mass;
 
 #if DEBUG_SUN_DIST
     if(othr->dist_to_sun_min < 0.) { // DEBUG
@@ -127,6 +129,24 @@ bool eng::Interactant::collide(const Interactant* const othr) const {
 
 
 
+void eng::Interactant::setDrawVelocity(const bool draw) {
+    if(draw) {
+        if(not this->isDrawVelocity()) {
+            this->drawer_velocity = new view::DrawableVelocity(this);
+            this->drawer_velocity->setParentItem(this);
+        }
+    } else {
+        if(this->isDrawVelocity()) {
+            this->drawer_velocity->setParentItem(nullptr);
+            delete this->drawer_velocity;
+        }
+    }
+}
+
+
+void eng::Interactant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                             QWidget *widget) {
+}
 
 /**
  * PRIVATE: change position of graphical representation

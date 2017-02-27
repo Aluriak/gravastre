@@ -61,13 +61,14 @@ namespace eng {
         // Accessors
         double getRadius() const { return this->radius_px; }
         QColor getColor() const { return this->color; }
-        QRectF boundingRect() const { return this->drawing_rect; };
+        QRectF boundingRect() const { return this->drawing_rect; }; // inherited
+        double getSize() const { return this->radius_px; }
 
 
     protected:
         // Graphic
         void mousePressEvent(QGraphicsSceneMouseEvent*);
-        void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+        void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*); // inherited
 
 
     private:
