@@ -60,6 +60,7 @@ See [`data/`](https://github.com/Aluriak/gravastre/tree/master/data) and [usage]
 - [X] config file for systems
 - [ ] options: show trajectory of selected Astre as an ellipse
 - [X] astre realistic radius
+- [X] player handling
 - [ ] token for replace astre when too far
 - [ ] creation of an Astre trajectory knowing (all?) Astres
 - [ ] print astre name when mouse over it (or its token)
@@ -85,7 +86,7 @@ Speeds are in [meter per second](https://en.wikipedia.org/wiki/SI_base_unit).
 Function to the system you want to seek, you could want to modify values found in the [options file](src/options.h).
 
 By default, these values works well with a representation of the telluric planets of the solar system,
-but for other systems like [TRAPPIST-1](TRAPPIST-1_system.json), you could want to tweat some values a little.
+but for other systems like [TRAPPIST-1](TRAPPIST-1_system.json), you could want to tweak some values a little.
 
 - PIXEL_PER_AU: number of pixel in one [astromical unit](https://en.wikipedia.org/wiki/Astronomical_unit). Increase it for a larger world.
 - SIMULATION_SPEED: number of second passing between each computation step.
